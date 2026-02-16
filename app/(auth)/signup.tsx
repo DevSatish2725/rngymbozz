@@ -2,14 +2,16 @@ import AppInput from "@/components/AppInput";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
-  ActivityIndicator,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  KeyboardAvoidingView, Platform, ScrollView,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { loading, loadingState, signup } from "../redux/slices/authSlice";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch } from "react-redux";
+import { signup } from "../redux/slices/authSlice";
+import AppButton from "@/components/AppButton";
 
 export default function Login() {
   const [signupDetails, setSignupDetails] = useState({
@@ -28,8 +30,7 @@ export default function Login() {
     email: "",
     password: "",
   });
-
-  const loadingValue = useSelector(loadingState);
+const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -160,7 +161,7 @@ export default function Login() {
         email: "",
         password: "",
       });
-      dispatch(loading(true));
+      setLoading(true);
       const response = new Promise((resolve) => {
         setTimeout(() => {
           resolve(true);
@@ -168,14 +169,20 @@ export default function Login() {
       });
       await response;
       dispatch(signup(signupDetails));
-      dispatch(loading(false));
+      setLoading(false);
       router.replace("/(auth)");
     }
-    console.log("Signup details:", signupDetails);
   };
   return (
+    <SafeAreaProvider>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+    <KeyboardAvoidingView
+  behavior={Platform.OS === "ios" ? "padding" : "height"}
+  style={{ flex: 1 }}
+>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
     <View style={styles.container}>
-      <Text style={styles.title}>GymBoss</Text>
+      <Text style={styles.logo}>GymBoss</Text>
       <Text style={styles.title}>14-day free trial. No card required.</Text>
       <AppInput
         label="Gym Name"
@@ -223,14 +230,8 @@ export default function Login() {
         value={signupDetails.password}
         onChangeText={(text) => inputChangeHandler("password", text)}
         type="password"
-      />
-      <TouchableOpacity style={styles.button} onPress={handleSignup}>
-        {loadingValue ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Sign Up</Text>
-        )}
-      </TouchableOpacity>
+              />
+      <AppButton title="Sign Up" onPress={handleSignup} loading={loading} />
       <View style={styles.footerContainer}>
         <Text style={styles.footer}>Already have an account?</Text>
         <TouchableOpacity onPress={() => router.push("/(auth)")}>
@@ -238,18 +239,40 @@ export default function Login() {
         </TouchableOpacity>
       </View>
     </View>
+      </ScrollView>
+</KeyboardAvoidingView>
+    </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  scrollContainer: {
+    padding: 20,
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: "#f4f6f9",
+    backgroundColor: "#ffffff",
     justifyContent: "center",
     paddingHorizontal: 25,
+    borderColor: "#ddd",
+    borderWidth: 1,
+    borderRadius: 10,
   },
-  title: {
+  logo: {
     fontSize: 26,
+    fontWeight: "bold",
+    marginTop: 20,
+    marginBottom: 30,
+    textAlign: "center",
+  },
+   title: {
+    fontSize: 16,
     fontWeight: "bold",
     marginBottom: 30,
     textAlign: "center",
@@ -275,6 +298,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     marginTop: 20,
+    marginBottom: 20,
     gap: 5,
   },
   footer: {

@@ -2,7 +2,6 @@ import AppInput from "@/components/AppInput";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
-  ActivityIndicator,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -10,6 +9,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { loading, loadingState, login } from "../redux/slices/authSlice";
+import AppButton from "@/components/AppButton";
 
 export default function Login() {
   const [loginDetails, setLoginDetails] = useState({
@@ -20,6 +20,8 @@ export default function Login() {
     email: "",
     password: "",
   });
+    
+    const [loading, setLoading] = useState(false);
 
   const loadingValue = useSelector(loadingState);
   const dispatch = useDispatch();
@@ -97,7 +99,7 @@ export default function Login() {
 
     if (!hasEmailError && !hasPasswordError) {
       setLoginErrors({ email: "", password: "" });
-      dispatch(loading(true));
+      setLoading(true);
       const response = new Promise((resolve) => {
         setTimeout(() => {
           resolve(true);
@@ -105,10 +107,9 @@ export default function Login() {
       });
       await response;
       dispatch(login(loginDetails));
-      dispatch(loading(false));
+      setLoading(false);
       router.replace("/(tabs)");
     }
-    console.log("Login details:", loginDetails);
   };
   return (
     <View style={styles.container}>
@@ -129,13 +130,7 @@ export default function Login() {
         onChangeText={(text) => inputChangeHandler("password", text)}
         type="password"
       />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        {loadingValue ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Login</Text>
-        )}
-      </TouchableOpacity>
+      <AppButton title="Login" onPress={handleLogin} loading={loading} />
       <View style={styles.footerContainer}>
         <Text style={styles.footer}>New Gym Owner?</Text>
         <TouchableOpacity onPress={() => router.push("/signup")}>
