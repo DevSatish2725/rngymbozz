@@ -7,6 +7,7 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
+import theme from "@/app/theme/theme";
 
 interface AppButtonProps {
   title: string;
@@ -43,10 +44,9 @@ const AppButton: React.FC<AppButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#007bff',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+    backgroundColor: theme.colors.primary,
+    padding: theme.spacing.md,
+    borderRadius: theme.radius.md,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -23,7 +23,7 @@ const MAPPING = {
   'creditcard.fill': 'credit-card',
   'wallet.pass.fill': 'account-balance-wallet',
   'gearshape.fill': 'settings',
-'checkmark.circle.fill': 'check-circle'
+  'checkmark.circle.fill': 'check-circle',
 } as IconMapping;
 
 /**

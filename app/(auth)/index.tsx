@@ -1,15 +1,29 @@
+import theme from "@/app/theme/theme";
+import AppButton from "@/components/AppButton";
 import AppInput from "@/components/AppInput";
+import storage from "@/config/storage";
+import useAppDispatch from "@/hooks/use-dispatch";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { loading, loadingState, login } from "../redux/slices/authSlice";
-import AppButton from "@/components/AppButton";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
+import { useSelector } from "react-redux";
+import {
+  authError,
+  clearAuthError,
+  loadingState,
+  user,
+} from "../redux/features/auth/authSlice";
+import authThunks from "../redux/features/auth/authThunks";
 
 export default function Login() {
   const [loginDetails, setLoginDetails] = useState({
@@ -20,11 +34,12 @@ export default function Login() {
     email: "",
     password: "",
   });
-    
-    const [loading, setLoading] = useState(false);
 
-  const loadingValue = useSelector(loadingState);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+
+  const loading = useSelector(loadingState);
+  const userDetails = useSelector(user);
+  const error = useSelector(authError);
 
   const inputChangeHandler = (key: string, text: string) => {
     if (key === "email") {
@@ -99,60 +114,108 @@ export default function Login() {
 
     if (!hasEmailError && !hasPasswordError) {
       setLoginErrors({ email: "", password: "" });
-      setLoading(true);
-      const response = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(true);
-        }, 2000);
-      });
-      await response;
-      dispatch(login(loginDetails));
-      setLoading(false);
-      router.replace("/(tabs)");
+      dispatch(clearAuthError());
+      await dispatch(authThunks.login(loginDetails));
     }
   };
+
+  useEffect(() => {
+    if (userDetails && userDetails.token) {
+      // Save token securely
+      storage.setItem("token", userDetails.token);
+      router.replace("/(tabs)");
+    }
+  }, [userDetails]);
+
+  useEffect(() => {
+    if (error) {
+      Toast.show({
+        type: "error",
+        text1: error,
+      });
+    }
+  }, [error]);
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>GymBoss</Text>
-      <Text style={styles.title}>Welcome Back</Text>
-      <AppInput
-        label="Email"
-        error={loginErrors.email}
-        value={loginDetails.email}
-        onChangeText={(text) => inputChangeHandler("email", text)}
-        keyboardType="email-address"
-        type="text"
-      />
-      <AppInput
-        label="Password"
-        error={loginErrors.password}
-        value={loginDetails.password}
-        onChangeText={(text) => inputChangeHandler("password", text)}
-        type="password"
-      />
-      <AppButton title="Login" onPress={handleLogin} loading={loading} />
-      <View style={styles.footerContainer}>
-        <Text style={styles.footer}>New Gym Owner?</Text>
-        <TouchableOpacity onPress={() => router.push("/signup")}>
-          <Text style={styles.link}>Start 14-day free trial?</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <View style={styles.container}>
+              <Text style={styles.companyName}>GymBoss</Text>
+              <View style={styles.contentContainer}>
+                <Text style={styles.title}>Welcome Back</Text>
+                <AppInput
+                  label="Email Address"
+                  error={loginErrors.email}
+                  value={loginDetails.email}
+                  onChangeText={(text) => inputChangeHandler("email", text)}
+                  keyboardType="email-address"
+                  type="text"
+                  placeholder="owner@gym.com"
+                />
+                <AppInput
+                  label="Password"
+                  error={loginErrors.password}
+                  value={loginDetails.password}
+                  onChangeText={(text) => inputChangeHandler("password", text)}
+                  type="password"
+                  placeholder="abcdG12@"
+                />
+                <AppButton
+                  title="Login"
+                  onPress={handleLogin}
+                  loading={loading}
+                />
+                <View style={styles.footerContainer}>
+                  <Text style={styles.footer}>New Gym Owner?</Text>
+                  <TouchableOpacity onPress={() => router.push("/signup")}>
+                    <Text style={styles.link}>Start 14-day free trial?</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
+  },
+  scrollContainer: {
+    padding: 20,
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: "#f4f6f9",
     justifyContent: "center",
-    paddingHorizontal: 25,
+    padding: theme.spacing.md,
   },
-  title: {
+  companyName: {
     fontSize: 26,
     fontWeight: "bold",
     marginBottom: 30,
     textAlign: "center",
+    color: theme.colors.primary,
+  },
+  contentContainer: {
+    backgroundColor: theme.colors.card,
+    padding: theme.spacing.lg,
+    borderRadius: theme.radius.lg,
+    borderWidth: 1,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 30,
+    color: theme.colors.textPrimary,
   },
   button: {
     backgroundColor: "#4a90e2",
@@ -182,7 +245,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   link: {
-    color: "#4a90e2",
+    color: theme.colors.primary,
     fontWeight: "bold",
   },
 });

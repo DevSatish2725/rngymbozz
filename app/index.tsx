@@ -1,11 +1,21 @@
 import { Redirect } from "expo-router";
+import { ActivityIndicator, View } from "react-native";
 import { useSelector } from "react-redux";
-import { user } from "../app/redux/slices/authSlice";
+import { isAuthenticated, loadingState } from "./redux/features/auth/authSlice";
 
 export default function Index() {
-  const userDetail = useSelector(user);
+  const isAllowed = useSelector(isAuthenticated);
+  const loading = useSelector(loadingState);
+  console.log("Is user authenticated in Index page?", isAllowed);
 
-  if (!userDetail) {
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+  if (!isAllowed) {
     return <Redirect href="/(auth)" />;
   }
 

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import theme from "@/app/theme/theme";
 
 interface AppInputProps extends TextInputProps {
   label?: string;
@@ -65,13 +66,14 @@ const styles = StyleSheet.create({
   label: {
     marginBlock: 6,
     fontWeight: "600",
+      color: theme.colors.textPrimary,
   },
   input: {
     flex: 1,
     height: 45,
   },
   toggle: {
-    color: "#4a90e2",
+    color: theme.colors.primary,
     fontWeight: "500",
   },
   error: {

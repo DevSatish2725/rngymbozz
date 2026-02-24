@@ -1,23 +1,33 @@
+import theme from "@/app/theme/theme";
+import AppButton from "@/components/AppButton";
 import AppInput from "@/components/AppInput";
+import useAppDispatch from "@/hooks/use-dispatch";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  KeyboardAvoidingView, Platform, ScrollView,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { useDispatch } from "react-redux";
-import { signup } from "../redux/slices/authSlice";
-import AppButton from "@/components/AppButton";
-
-export default function Login() {
+import Toast from "react-native-toast-message";
+import { useSelector } from "react-redux";
+import {
+  authError,
+  clearAuthError,
+  loadingState,
+  signupUser,
+} from "../redux/features/auth/authSlice";
+import authThunks from "../redux/features/auth/authThunks";
+export default function Signup() {
   const [signupDetails, setSignupDetails] = useState({
     ownerName: "",
     gymName: "",
-    phoneNumber: "",
+    phone: "",
     address: "",
     email: "",
     password: "",
@@ -25,17 +35,24 @@ export default function Login() {
   const [signupErrors, setSignupErrors] = useState({
     ownerName: "",
     gymName: "",
-    phoneNumber: "",
+    phone: "",
     address: "",
     email: "",
     password: "",
   });
-const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+
+  const loading = useSelector(loadingState);
+  const user = useSelector(signupUser);
+  const error = useSelector(authError);
 
   const inputChangeHandler = (key: string, text: string) => {
     setSignupErrors((prev) => ({ ...prev, [key]: "" }));
+    if (key === "phone") {
+      text = allowOnlyNumbers(text);
+    }
     setSignupDetails((prev) => ({ ...prev, [key]: text }));
   };
 
@@ -68,7 +85,9 @@ const [loading, setLoading] = useState(false);
     const regex = /^[6-9]\d{9}$/;
     return regex.test(phone);
   };
-
+  const allowOnlyNumbers = (value: string) => {
+    return value.replace(/\D/g, "");
+  };
   const handleSignup = async () => {
     let hasEmailError = false;
     let hasPasswordError = false;
@@ -107,21 +126,21 @@ const [loading, setLoading] = useState(false);
       }
     }
 
-    if (!signupDetails.phoneNumber) {
+    if (!signupDetails.phone) {
       setSignupErrors((prev) => ({
         ...prev,
-        phoneNumber: "This field is required.",
+        phone: "This field is required.",
       }));
       hasPhoneError = true;
-    } else if (signupDetails.phoneNumber) {
-      if (!validateIndianPhone(signupDetails.phoneNumber)) {
+    } else if (signupDetails.phone) {
+      if (!validateIndianPhone(signupDetails.phone)) {
         setSignupErrors((prev) => ({
           ...prev,
-          phoneNumber: "Please enter a valid Indian phone number.",
+          phone: "Please enter a valid Indian phone number.",
         }));
         hasPhoneError = true;
       } else {
-        setSignupErrors((prev) => ({ ...prev, phoneNumber: "" }));
+        setSignupErrors((prev) => ({ ...prev, phone: "" }));
         hasPhoneError = false;
       }
     }
@@ -156,92 +175,116 @@ const [loading, setLoading] = useState(false);
       setSignupErrors({
         ownerName: "",
         gymName: "",
-        phoneNumber: "",
+        phone: "",
         address: "",
         email: "",
         password: "",
       });
-      setLoading(true);
-      const response = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(true);
-        }, 2000);
-      });
-      await response;
-      dispatch(signup(signupDetails));
-      setLoading(false);
-      router.replace("/(auth)");
+      dispatch(clearAuthError());
+      await dispatch(authThunks.signup(signupDetails));
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      router.replace("/(auth)");
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (error) {
+      Toast.show({
+        type: "error",
+        text1: error,
+      });
+    }
+  }, [error]);
   return (
     <SafeAreaProvider>
-    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
-    <KeyboardAvoidingView
-  behavior={Platform.OS === "ios" ? "padding" : "height"}
-  style={{ flex: 1 }}
->
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-    <View style={styles.container}>
-      <Text style={styles.logo}>GymBoss</Text>
-      <Text style={styles.title}>14-day free trial. No card required.</Text>
-      <AppInput
-        label="Gym Name"
-        error={signupErrors.gymName}
-        value={signupDetails.gymName}
-        onChangeText={(text) => inputChangeHandler("gymName", text)}
-        type="text"
-      />
-      <AppInput
-        label="Owner Name"
-        error={signupErrors.ownerName}
-        value={signupDetails.ownerName}
-        onChangeText={(text) => inputChangeHandler("ownerName", text)}
-        type="text"
-      />
-      <AppInput
-        label="Phone"
-        error={signupErrors.phoneNumber}
-        value={signupDetails.phoneNumber}
-        onChangeText={(text) => inputChangeHandler("phoneNumber", text)}
-        type="text"
-        keyboardType="phone-pad"
-        textContentType="telephoneNumber"
-        autoComplete="tel"
-        maxLength={10}
-      />
-      <AppInput
-        label="Email"
-        error={signupErrors.email}
-        value={signupDetails.email}
-        onChangeText={(text) => inputChangeHandler("email", text)}
-        keyboardType="email-address"
-        type="text"
-      />
-      <AppInput
-        label="Address"
-        error={signupErrors.address}
-        value={signupDetails.address}
-        onChangeText={(text) => inputChangeHandler("address", text)}
-        type="text"
-      />
-      <AppInput
-        label="Password"
-        error={signupErrors.password}
-        value={signupDetails.password}
-        onChangeText={(text) => inputChangeHandler("password", text)}
-        type="password"
-              />
-      <AppButton title="Sign Up" onPress={handleSignup} loading={loading} />
-      <View style={styles.footerContainer}>
-        <Text style={styles.footer}>Already have an account?</Text>
-        <TouchableOpacity onPress={() => router.push("/(auth)")}>
-          <Text style={styles.link}>Login</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-      </ScrollView>
-</KeyboardAvoidingView>
-    </SafeAreaView>
+      <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <View style={styles.container}>
+              <View style={styles.contentContainer}>
+                <Text style={styles.companyName}>GymBoss</Text>
+                <View style={styles.offerContainer}>
+                  <Text style={styles.offerTitle}>
+                    14-day free trial. No card required.
+                  </Text>
+                </View>
+                <Text style={styles.title}>Get Started with GymBoss</Text>
+                <AppInput
+                  label="Gym Name"
+                  error={signupErrors.gymName}
+                  value={signupDetails.gymName}
+                  onChangeText={(text) => inputChangeHandler("gymName", text)}
+                  type="text"
+                  placeholder="PowerHouse Gym"
+                />
+                <AppInput
+                  label="Owner Name"
+                  error={signupErrors.ownerName}
+                  value={signupDetails.ownerName}
+                  onChangeText={(text) => inputChangeHandler("ownerName", text)}
+                  type="text"
+                  placeholder="John Doe"
+                />
+                <AppInput
+                  label="Phone Number"
+                  error={signupErrors.phone}
+                  value={signupDetails.phone}
+                  onChangeText={(text) => inputChangeHandler("phone", text)}
+                  type="text"
+                  keyboardType="phone-pad"
+                  textContentType="telephoneNumber"
+                  autoComplete="tel"
+                  maxLength={10}
+                  placeholder="9999999999"
+                />
+                <AppInput
+                  label="Email"
+                  error={signupErrors.email}
+                  value={signupDetails.email}
+                  onChangeText={(text) => inputChangeHandler("email", text)}
+                  keyboardType="email-address"
+                  type="text"
+                  placeholder="owner@gym.com"
+                />
+                <AppInput
+                  label="Address"
+                  error={signupErrors.address}
+                  value={signupDetails.address}
+                  onChangeText={(text) => inputChangeHandler("address", text)}
+                  type="text"
+                  placeholder="First Stree, City, State, ZIP"
+                />
+                <AppInput
+                  label="Password"
+                  error={signupErrors.password}
+                  value={signupDetails.password}
+                  onChangeText={(text) => inputChangeHandler("password", text)}
+                  type="password"
+                  placeholder="abcdG12@"
+                />
+                <AppButton
+                  title="Sign Up"
+                  onPress={handleSignup}
+                  loading={loading}
+                />
+                <View style={styles.footerContainer}>
+                  <Text style={styles.footer}>Already have an account?</Text>
+                  <TouchableOpacity onPress={() => router.push("/(auth)")}>
+                    <Text style={styles.link}>Login</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }
@@ -249,7 +292,7 @@ const [loading, setLoading] = useState(false);
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: theme.colors.background,
   },
   scrollContainer: {
     padding: 20,
@@ -257,37 +300,38 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
-    justifyContent: "center",
-    paddingHorizontal: 25,
-    borderColor: "#ddd",
-    borderWidth: 1,
-    borderRadius: 10,
   },
-  logo: {
+  contentContainer: {
+    backgroundColor: theme.colors.card,
+    padding: theme.spacing.lg,
+    borderRadius: theme.radius.lg,
+    borderWidth: 1,
+  },
+  companyName: {
     fontSize: 26,
     fontWeight: "bold",
     marginTop: 20,
     marginBottom: 30,
     textAlign: "center",
+    color: theme.colors.primary,
   },
-   title: {
-    fontSize: 16,
+  offerContainer: {
+    backgroundColor: theme.colors.primaryLight,
+    padding: theme.spacing.xs,
+    borderRadius: theme.radius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+  },
+  offerTitle: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: theme.colors.primary,
+  },
+  title: {
+    fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 30,
-    textAlign: "center",
-  },
-  button: {
-    backgroundColor: "#4a90e2",
-    padding: 14,
-    borderRadius: 8,
     marginTop: 20,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
+    marginBottom: 20,
   },
   error: {
     color: "red",
@@ -306,7 +350,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   link: {
-    color: "#4a90e2",
+    color: theme.colors.primary,
     fontWeight: "bold",
   },
 });

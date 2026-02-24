@@ -1,6 +1,6 @@
-import { colors } from "./colors";
+import colors from "./colors";
 
-export const theme = {
+const theme = {
   colors,
   spacing: {
     xs: 4,
@@ -15,3 +15,5 @@ export const theme = {
     lg: 16,
   },
 };
+
+export default theme;
