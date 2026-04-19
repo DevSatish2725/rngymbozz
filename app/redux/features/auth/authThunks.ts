@@ -8,12 +8,9 @@ const login = createAsyncThunk<LoginResponse, LoginPayload, {rejectValue: string
     payload, {rejectWithValue}
   ) => {
     try {
-      console.log("Login payload in thunk:", payload);
       const response = await authApi.login(payload);
-      console.log("Login response in thunk:", response);
       return response.data;
     } catch (error: any) {
-      console.log("Login error in thunk:", error);
       return rejectWithValue(error.response?.data?.message || "Login failed");
     }
   },

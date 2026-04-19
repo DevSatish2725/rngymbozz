@@ -1,13 +1,13 @@
-import React from 'react';
+import theme from "@/app/theme/theme";
+import React from "react";
 import {
-  TouchableOpacity,
-  Text,
   ActivityIndicator,
   StyleSheet,
-  ViewStyle,
+  Text,
   TextStyle,
-} from 'react-native';
-import theme from "@/app/theme/theme";
+  TouchableOpacity,
+  ViewStyle,
+} from "react-native";
 
 interface AppButtonProps {
   title: string;
@@ -16,6 +16,7 @@ interface AppButtonProps {
   disabled?: boolean;
   buttonStyle?: ViewStyle;
   textStyle?: TextStyle;
+  width?: number;
 }
 
 const AppButton: React.FC<AppButtonProps> = ({
@@ -25,10 +26,16 @@ const AppButton: React.FC<AppButtonProps> = ({
   disabled = false,
   buttonStyle,
   textStyle,
+  width,
 }) => {
   return (
     <TouchableOpacity
-      style={[styles.button, buttonStyle, (disabled || loading) && styles.disabled]}
+      style={[
+        styles.button,
+        buttonStyle,
+        { width: width },
+        (disabled || loading) && styles.disabled,
+      ]}
       onPress={onPress}
       disabled={disabled || loading}
       activeOpacity={0.7}
@@ -47,13 +54,13 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary,
     padding: theme.spacing.md,
     borderRadius: theme.radius.md,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   text: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   disabled: {
     opacity: 0.6,

@@ -1,6 +1,7 @@
 import theme from "@/app/theme/theme";
 import AppButton from "@/components/AppButton";
 import AppInput from "@/components/AppInput";
+import storage from "@/config/storage";
 import useAppDispatch from "@/hooks/use-dispatch";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
@@ -181,6 +182,7 @@ export default function Signup() {
         password: "",
       });
       dispatch(clearAuthError());
+      await storage.removeItem("token");
       await dispatch(authThunks.signup(signupDetails));
     }
   };
@@ -276,7 +278,13 @@ export default function Signup() {
                 />
                 <View style={styles.footerContainer}>
                   <Text style={styles.footer}>Already have an account?</Text>
-                  <TouchableOpacity onPress={() => router.push("/(auth)")}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      dispatch(clearAuthError());
+                      Toast.hide();
+                      router.push("/(auth)");
+                    }}
+                  >
                     <Text style={styles.link}>Login</Text>
                   </TouchableOpacity>
                 </View>

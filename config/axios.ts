@@ -11,18 +11,17 @@ const axiosInstance = axios.create({
   },
 });
 
-axiosInstance.interceptors.request.use((config) => {
+axiosInstance.interceptors.request.use(async (config) => {
   // const token = await SecureStore.getItemAsync("token");
 
   //   const token = tokenManager.getToken();
-  const token = storage.getItem("token");
-  console.log("Request interceptor - token:", token);
-  console.log("Request interceptor - config:", config);
+  const token = await storage.getItem("token");
   if (
     token &&
     (!config.url?.includes("/login") || config.url?.includes("/signup"))
   ) {
     config.headers.Authorization = `Bearer ${token}`;
+    console.log("Request interceptor - config:", config);
   }
   return config;
 });

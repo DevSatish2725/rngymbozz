@@ -123,6 +123,7 @@ export default function Login() {
     if (userDetails && userDetails.token) {
       // Save token securely
       storage.setItem("token", userDetails.token);
+      
       router.replace("/(tabs)");
     }
   }, [userDetails]);
@@ -171,7 +172,13 @@ export default function Login() {
                 />
                 <View style={styles.footerContainer}>
                   <Text style={styles.footer}>New Gym Owner?</Text>
-                  <TouchableOpacity onPress={() => router.push("/signup")}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      dispatch(clearAuthError());
+                      Toast.hide();
+                      router.push("/signup");
+                    }}
+                  >
                     <Text style={styles.link}>Start 14-day free trial?</Text>
                   </TouchableOpacity>
                 </View>
