@@ -1,18 +1,15 @@
-import { Tabs } from "expo-router";
-import React from "react";
-
 import AppHeader from "@/components/AppHeader";
 import { HapticTab } from "@/components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { View } from "react-native";
+import { Tabs } from "expo-router";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <View style={{ flex: 1 }}>
+    <>
       <AppHeader />
       <Tabs
         screenOptions={{
@@ -81,6 +78,6 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
-    </View>
+    </>
   );
 }

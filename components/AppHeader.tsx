@@ -69,7 +69,7 @@ export default function AppHeader() {
             style={styles.profileIconContainer}
             onPress={() => router.push("/profile")}
           >
-            <Text style={{color: "#fff", fontSize: 20, fontWeight: 600}}>{profileDetails?.ownerName.charAt(0)}</Text>
+            <Text style={{color: "#fff", fontSize: 20, fontWeight: 600}}>{profileDetails?.ownerName?.charAt(0)}</Text>
             {/* <IconSymbol size={28} name="person.fill" color={"#fff"} /> */}
           </TouchableOpacity>
         </View>

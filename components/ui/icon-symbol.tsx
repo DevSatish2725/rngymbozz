@@ -26,6 +26,10 @@ const MAPPING = {
   'checkmark.circle.fill': 'check-circle',
   'square.grid.2x2': 'dashboard',
   'info.circle': 'info',
+  'calendar.circle.fill': 'event',
+  'door.left.hand.open': 'meeting-room',
+  'person.2.circle.fill': 'people',
+  'banknote.fill': 'payments'
 } as IconMapping;
 
 /**
