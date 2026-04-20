@@ -1,23 +1,19 @@
-import { Image } from "expo-image";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text } from "react-native";
 
 import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import theme from "../theme/theme";
 
 export default function HomeScreen() {
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: "#269ee3", dark: "#1D3D47" }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/partial-react-logo.png")}
-          style={styles.reactLogo}
-        />
-      }
+    headerBackgroundColor={{ light: theme.colors.primary, dark: "#1D3D47" }}
+    headerImage={
+      <Text style={styles.titleContainer}>Dashboard</Text>
+    }
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Dashboard</ThemedText>
         {/* <HelloWave /> */}
       </ThemedView>
     </ParallaxScrollView>
@@ -26,9 +22,10 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
+    paddingBlock: 12,
+    paddingHorizontal: 12,
+    color: "#fff",
+    fontSize: 18
   },
   stepContainer: {
     gap: 8,
