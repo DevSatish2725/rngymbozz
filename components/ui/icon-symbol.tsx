@@ -24,6 +24,7 @@ const MAPPING = {
   'wallet.pass.fill': 'account-balance-wallet',
   'gearshape.fill': 'settings',
   'checkmark.circle.fill': 'check-circle',
+  'square.grid.2x2': 'dashboard'
 } as IconMapping;
 
 /**

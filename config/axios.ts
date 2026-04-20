@@ -12,16 +12,12 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(async (config) => {
-  // const token = await SecureStore.getItemAsync("token");
-
-  //   const token = tokenManager.getToken();
   const token = await storage.getItem("token");
   if (
     token &&
-    (!config.url?.includes("/login") || config.url?.includes("/signup"))
+    !(config.url?.includes("/login") || config.url?.includes("/signup"))
   ) {
     config.headers.Authorization = `Bearer ${token}`;
-    console.log("Request interceptor - config:", config);
   }
   return config;
 });
@@ -32,8 +28,8 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     if (
       error.response?.status === 401 &&
-      (!originalRequest.url?.includes("/login") ||
-        !originalRequest.url?.includes("/signup"))
+      !(originalRequest.url?.includes("/login") ||
+        originalRequest.url?.includes("/signup"))
     ) {
       await SecureStore.deleteItemAsync("token");
       // dispatch logout here

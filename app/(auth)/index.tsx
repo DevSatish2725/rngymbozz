@@ -24,6 +24,8 @@ import {
   user,
 } from "../redux/features/auth/authSlice";
 import authThunks from "../redux/features/auth/authThunks";
+import { getProfileDetail } from "../redux/features/profile/profileSlice";
+import { profileThunk } from "../redux/features/profile/profileThunks";
 
 export default function Login() {
   const [loginDetails, setLoginDetails] = useState({
@@ -40,7 +42,7 @@ export default function Login() {
   const loading = useSelector(loadingState);
   const userDetails = useSelector(user);
   const error = useSelector(authError);
-
+  const profileDetails = useSelector(getProfileDetail);
   const inputChangeHandler = (key: string, text: string) => {
     if (key === "email") {
       setLoginErrors((prev) => ({ ...prev, email: "" }));
@@ -119,14 +121,24 @@ export default function Login() {
     }
   };
 
+  const fetchProfileDetails = async (token: string) => {
+    // Save token securely
+    await storage.setItem("token", token);
+    await dispatch(profileThunk());
+    router.replace("/(tabs)");
+  };
+
   useEffect(() => {
     if (userDetails && userDetails.token) {
-      // Save token securely
-      storage.setItem("token", userDetails.token);
-      
-      router.replace("/(tabs)");
+      fetchProfileDetails(userDetails.token);
     }
   }, [userDetails]);
+
+  useEffect(() => {
+    if (Object.keys(profileDetails)) {
+      storage.setItem("profileDetails", JSON.stringify(profileDetails));
+    }
+  }, [profileDetails]);
 
   useEffect(() => {
     if (error) {

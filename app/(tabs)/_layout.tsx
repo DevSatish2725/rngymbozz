@@ -17,6 +17,7 @@ export default function TabLayout() {
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+          tabBarInactiveTintColor: Colors[colorScheme ?? "light"].icon,
           headerShown: false,
           tabBarButton: HapticTab,
         }}
@@ -26,7 +27,7 @@ export default function TabLayout() {
           options={{
             title: "Dashboard",
             tabBarIcon: ({ color }) => (
-              <IconSymbol size={28} name="house.fill" color={color} />
+              <IconSymbol size={28} name="square.grid.2x2" color={color} />
             ),
           }}
         />
