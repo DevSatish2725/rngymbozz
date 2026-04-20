@@ -5,16 +5,31 @@ import {
 import theme from "@/app/theme/theme";
 import storage from "@/config/storage";
 import useAppDispatch from "@/hooks/use-dispatch";
-import { useRouter } from "expo-router";
-import { useEffect } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useSelector } from "react-redux";
-import { IconSymbol } from "./ui/icon-symbol";
 import { getDaysBetweenDates } from "@/utils/getDaysBetweenDate";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { useSelector } from "react-redux";
+import AppButton from "./AppButton";
+import AppModal from "./ui/AppModal";
+import { IconSymbol } from "./ui/icon-symbol";
+
+const { width, height } = Dimensions.get("window");
+
 export default function AppHeader() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
   const profileDetails = useSelector(getProfileDetail);
   const dispatch = useAppDispatch();
+  useEffect(() => {
+    getProfileDetails();
+  }, []);
   const getProfileDetails = async () => {
     const value = await storage.getItem("profileDetails");
     if (value) {
@@ -22,9 +37,16 @@ export default function AppHeader() {
       dispatch(updateProfileDetail(convertToNormalObj));
     }
   };
-  useEffect(() => {
-    getProfileDetails();
-  }, []);
+  const openModalHandler = () => {
+    setIsModalOpen(true);
+  };
+  const closeModalHandler = () => {
+    setIsModalOpen(false);
+  };
+  const goToBilling = () => {
+    setIsModalOpen(false);
+    router.push("/billing");
+  };
   return (
     <View style={styles.container}>
       <View style={styles.topHeader}>
@@ -47,17 +69,65 @@ export default function AppHeader() {
             style={styles.profileIconContainer}
             onPress={() => router.push("/profile")}
           >
-            <IconSymbol size={28} name="person.fill" color={"#fff"} />
+            <Text style={{color: "#fff", fontSize: 20, fontWeight: 600}}>{profileDetails?.ownerName.charAt(0)}</Text>
+            {/* <IconSymbol size={28} name="person.fill" color={"#fff"} /> */}
           </TouchableOpacity>
         </View>
       </View>
       <View style={styles.bottomHeader}>
-        <Text style={{paddingLeft: 12, fontSize: 18, fontWeight: 600}}>{profileDetails?.gymName}</Text>
-        <View style={{paddingRight: 12, flexDirection:"row", gap: 8, alignItems: "center"}}>
+        <View style={{ flexDirection: "row", gap: 4, alignItems: "center" }}>
+          <Text style={{ paddingLeft: 12, fontSize: 18, fontWeight: 600 }}>
+            {profileDetails?.gymName}
+          </Text>
+          <TouchableOpacity onPress={openModalHandler}>
+            <IconSymbol size={28} name="info.circle" color={"#feb179"} />
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            paddingRight: 12,
+            flexDirection: "row",
+            gap: 8,
+            alignItems: "center",
+          }}
+        >
           <Text style={styles.plan}>{profileDetails?.subscriptionPlan}</Text>
-          <Text>{getDaysBetweenDates(new Date(), profileDetails?.trialEndDate)} days</Text>
+          <Text>
+            {getDaysBetweenDates(new Date(), profileDetails?.trialEndDate)} days
+          </Text>
         </View>
       </View>
+      <AppModal isOpen={isModalOpen}>
+        <View style={styles.modalContentArea}>
+          <Text style={{ color: "#973c00", fontSize: 16, textAlign: "center" }}>
+            Your free trial expires in 13 days. Upgrade to Pro to keep growing.
+          </Text>
+          <View
+            style={{ flexDirection: "row", justifyContent: "center", gap: 8 }}
+          >
+            <AppButton
+              title="View Plans"
+              onPress={goToBilling}
+              customStyle={{
+                backgroundColor: theme.colors.primary,
+                color: "#fff",
+                borderWidth: 1,
+                borderColor: theme.colors.primary,
+              }}
+            />
+            <AppButton
+              title="Close"
+              onPress={closeModalHandler}
+              customStyle={{
+                backgroundColor: "#fff",
+                color: theme.colors.primary,
+                borderWidth: 1,
+                borderColor: theme.colors.primary,
+              }}
+            />
+          </View>
+        </View>
+      </AppModal>
     </View>
   );
 }
@@ -74,19 +144,19 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderBottomColor: "#e1e1e1",
     borderBottomWidth: 1,
-    paddingBottom: 12
+    paddingBottom: 12,
   },
   bottomHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: 12
+    paddingTop: 12,
   },
   iconContainer: {
     flexDirection: "row",
     alignItems: "center",
     gap: 2,
-    paddingLeft: 12
+    paddingLeft: 12,
   },
   title: {
     color: theme.colors.primary,
@@ -96,7 +166,7 @@ const styles = StyleSheet.create({
   profileContainer: {
     flexDirection: "row",
     gap: 7,
-    paddingRight: 12
+    paddingRight: 12,
   },
   profileTextContainer: {
     alignItems: "flex-end",
@@ -118,6 +188,18 @@ const styles = StyleSheet.create({
     borderColor: "#fef3c6",
     padding: 6,
     color: "#bb4d00",
-    backgroundColor: "#fffbeb"
-  }
+    backgroundColor: "#fffbeb",
+  },
+  modalContentArea: {
+    width: width * 0.8,
+    height: height * 0.3,
+    borderRadius: 10,
+    padding: 12,
+    borderColor: theme.colors.primary,
+    borderWidth: 1,
+    boxShadow: "0px 4px 8px rgba(0,0,0,0.15)",
+    backgroundColor: "#fffbeb",
+    justifyContent: "center",
+    gap: 16,
+  },
 });

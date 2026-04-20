@@ -17,6 +17,12 @@ interface AppButtonProps {
   buttonStyle?: ViewStyle;
   textStyle?: TextStyle;
   width?: number;
+  customStyle?: {
+    backgroundColor?: string;
+    color?: string;
+    borderWidth?: number;
+    borderColor?: string;
+  };
 }
 
 const AppButton: React.FC<AppButtonProps> = ({
@@ -27,11 +33,13 @@ const AppButton: React.FC<AppButtonProps> = ({
   buttonStyle,
   textStyle,
   width,
+  customStyle,
 }) => {
   return (
     <TouchableOpacity
       style={[
         styles.button,
+        customStyle,
         buttonStyle,
         { width: width },
         (disabled || loading) && styles.disabled,
@@ -43,7 +51,9 @@ const AppButton: React.FC<AppButtonProps> = ({
       {loading ? (
         <ActivityIndicator color="#fff" />
       ) : (
-        <Text style={[styles.text, textStyle]}>{title}</Text>
+        <Text style={[styles.text, textStyle, { color: customStyle?.color }]}>
+          {title}
+        </Text>
       )}
     </TouchableOpacity>
   );
@@ -51,14 +61,12 @@ const AppButton: React.FC<AppButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: theme.colors.primary,
     padding: theme.spacing.md,
     borderRadius: theme.radius.md,
     alignItems: "center",
     justifyContent: "center",
   },
   text: {
-    color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
   },
