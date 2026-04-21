@@ -1,16 +1,16 @@
 import { Dimensions, StyleSheet, Text, View } from "react-native";
-import { BarChart } from "react-native-chart-kit";
+import { LineChart } from "react-native-chart-kit";
 
 const screenWidth = Dimensions.get("window").width;
 
-export default function AppBarchart() {
+export default function PeakHourChart() {
   // Hour-wise data (0–23)
   const hourlyData = [
-    { hour: 0, value: 10 },
-    { hour: 1, value: 5 },
-    { hour: 2, value: 2 },
-    { hour: 3, value: 1 },
-    { hour: 4, value: 3 },
+    // { hour: 0, value: 10 },
+    // { hour: 1, value: 5 },
+    // { hour: 2, value: 2 },
+    // { hour: 3, value: 1 },
+    // { hour: 4, value: 3 },
     { hour: 5, value: 6 },
     { hour: 6, value: 15 },
     { hour: 7, value: 25 },
@@ -32,13 +32,10 @@ export default function AppBarchart() {
     { hour: 23, value: 20 },
   ];
 
-  // Find peak
   const maxValue = Math.max(...hourlyData.map((d) => d.value));
   const peakHours = hourlyData.filter((d) => d.value === maxValue);
-
-  // Format hour (AM/PM)
-  const formatHour = (h: number) => `${h % 12 || 12}${h < 12 ? " AM" : " PM"}`;
-
+  // Format hour
+  const formatHour = (h: number) => `${h % 12 || 12} ${h < 12 ? "AM" : "PM"}`;
   // Chart data
   const chartData = {
     labels: hourlyData.map((d) => d.hour.toString()),
@@ -49,39 +46,55 @@ export default function AppBarchart() {
     ],
   };
 
+  // Chart config
+  const chartConfig = {
+    backgroundGradientFrom: "#F8F9FF",
+    backgroundGradientTo: "#F8F9FF",
+
+    decimalPlaces: 0,
+
+    // Line color (primary)
+    color: (opacity = 1) => `rgba(91, 95, 239, ${opacity})`,
+
+    // Label color
+    labelColor: (opacity = 1) => `rgba(80, 80, 120, ${opacity})`,
+
+    // Dot styling
+    propsForDots: {
+      r: "4",
+      strokeWidth: "2",
+      stroke: "#5B5FEF",
+      fill: "#ffffff",
+    },
+
+    // Grid lines
+    propsForBackgroundLines: {
+      stroke: "#E6E8FF",
+      strokeDasharray: "", // solid line
+    },
+  };
+
   return (
     <View>
       {/* Peak Hour Display */}
       <View style={styles.peakContainer}>
-        <Text style={styles.peakTitle}>🔥 Peak Hour(s)</Text>
+        <Text style={styles.peakTitle}>Peak Hour(s)</Text>
         {peakHours.map((p) => (
           <Text key={p.hour} style={styles.peakText}>
             {formatHour(p.hour)} - {formatHour(p.hour + 1)} ({p.value})
           </Text>
         ))}
       </View>
-      <BarChart
-        data={chartData}
-        width={screenWidth - 20}
-        height={260}
-        yAxisLabel=""
-        chartConfig={{
-          backgroundGradientFrom: "#ffffff",
-          backgroundGradientTo: "#ffffff",
-          decimalPlaces: 0,
-          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          style: {
-            borderRadius: 16,
-          },
-          propsForBackgroundLines: {
-            stroke: "#e3e3e3",
-          },
-        }}
-        style={styles.chart}
-        fromZero
-        showValuesOnTopOfBars
-      />
+      <View style={styles.chartContainer}>
+        <LineChart
+          data={chartData}
+          width={screenWidth - 55}
+          height={250}
+          chartConfig={chartConfig}
+          bezier
+          style={styles.chart}
+        />
+      </View>
     </View>
   );
 }
@@ -99,8 +112,23 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: "center",
   },
-  chart: {
+  chartContainer: {
+    marginVertical: 16,
+    padding: 12,
+    backgroundColor: "#FFFFFF",
     borderRadius: 16,
+
+    // shadow (iOS)
+    shadowColor: "#5B5FEF",
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+
+    // elevation (Android)
+    elevation: 4,
+  },
+  chart: {
+    borderRadius: 12,
+    backgroundColor: "rgba(91,95,239,1)",
   },
   peakContainer: {
     marginTop: 20,
