@@ -7,10 +7,10 @@ import {
   RecentPaymentItem,
   RecentPaymentType,
 } from "@/components/dashboard/RecentPayments";
+import { ScreenHeader } from "@/components/ScreenHeader";
 import { ThemedView } from "@/components/themed-view";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { router } from "expo-router";
-import theme from "../theme/theme";
 
 type DashboardSection =
   | { type: "stats" }
@@ -128,9 +128,7 @@ export default function Dashboard() {
   };
   return (
     <ThemedView style={{ flex: 1 }}>
-      <View style={[styles.headerBanner]}>
-        <Text style={styles.headerTitle}>Dashboard</Text>
-      </View>
+      <ScreenHeader screenName="Dashboard" />
       <FlatList
         data={sections}
         keyExtractor={(item, index) => {
@@ -147,15 +145,6 @@ export default function Dashboard() {
 }
 
 const styles = StyleSheet.create({
-  headerBanner: {
-    backgroundColor: theme.colors.primary,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-  },
-  headerTitle: {
-    color: "#fff",
-    fontSize: 18,
-  },
   titleContainer: {
     paddingBlock: 12,
     paddingHorizontal: 12,

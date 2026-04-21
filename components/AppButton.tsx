@@ -1,11 +1,12 @@
 import theme from "@/app/theme/theme";
-import React from "react";
+import React, { ReactNode } from "react";
 import {
   ActivityIndicator,
   StyleSheet,
   Text,
   TextStyle,
   TouchableOpacity,
+  View,
   ViewStyle,
 } from "react-native";
 
@@ -23,6 +24,7 @@ interface AppButtonProps {
     borderWidth?: number;
     borderColor?: string;
   };
+  icon?: ReactNode;
 }
 
 const AppButton: React.FC<AppButtonProps> = ({
@@ -34,6 +36,7 @@ const AppButton: React.FC<AppButtonProps> = ({
   textStyle,
   width,
   customStyle,
+  icon,
 }) => {
   return (
     <TouchableOpacity
@@ -51,9 +54,12 @@ const AppButton: React.FC<AppButtonProps> = ({
       {loading ? (
         <ActivityIndicator color="#fff" />
       ) : (
-        <Text style={[styles.text, textStyle, { color: customStyle?.color }]}>
-          {title}
-        </Text>
+        <View style={styles.buttonContentContainer}>
+          {icon ?? null}
+          <Text style={[styles.text, textStyle, { color: customStyle?.color }]}>
+            {title}
+          </Text>
+        </View>
       )}
     </TouchableOpacity>
   );
@@ -66,6 +72,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  buttonContentContainer: { flexDirection: "row", alignItems: "center" },
   text: {
     fontSize: 16,
     fontWeight: "bold",

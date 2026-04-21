@@ -29,7 +29,10 @@ const MAPPING = {
   'calendar.circle.fill': 'event',
   'door.left.hand.open': 'meeting-room',
   'person.2.circle.fill': 'people',
-  'banknote.fill': 'payments'
+  'banknote.fill': 'payments',
+  'plus': 'add',
+  'magnifyingglass': 'search',
+  'line.horizontal.3.decrease.circle.fill': 'filter-alt'
 } as IconMapping;
 
 /**

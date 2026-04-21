@@ -51,7 +51,7 @@ export default function AppInput({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    // marginBottom: 16,
   },
   inputContainer: {
     flexDirection: "row",
