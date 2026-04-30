@@ -2,13 +2,17 @@ import theme from "@/app/theme/theme";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
-import { ClientCardProps, AllClientsData, RightActionProps } from "../../types/clients";
+import {
+  AllClientsData,
+  ClientCardProps,
+  RightActionProps,
+} from "../../types/clients";
 import { IconSymbol } from "../ui/icon-symbol";
 
 const STATUS_COLOR: Record<AllClientsData["status"], string> = {
   Active: "#16a34a",
   Expired: "#dc2626",
-  "INACTIVE": "#2690dc",
+  INACTIVE: "#2690dc",
   "Expiring Soon": "#d97706",
 };
 
@@ -63,7 +67,9 @@ export default function ClientCard({
             </Text>
           </View>
         </View>
-        <Text style={styles.expiry}>Expires: {client.membershipEndDate ?? "N/A"}</Text>
+        <Text style={styles.expiry}>
+          Expires: {client.membershipEndDate ?? "N/A"}
+        </Text>
       </TouchableOpacity>
     </ReanimatedSwipeable>
   );
@@ -109,7 +115,7 @@ const styles = StyleSheet.create({
   badge: {
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 20, 
+    borderRadius: 20,
   },
   badgeText: {
     fontSize: 12,

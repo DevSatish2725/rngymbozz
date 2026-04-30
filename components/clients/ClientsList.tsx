@@ -4,7 +4,6 @@ import { Text, View } from "react-native";
 import { AllClientsData, ClientListProps } from "../../types/clients";
 import ClientCard from "./ClientCard";
 function ClientsList({ clients, onPress, onEdit, onDelete }: ClientListProps) {
-  console.log("client data", clients);
   return (
     <View style={{ flex: 1 }}>
       {clients.length ? (

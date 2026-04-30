@@ -13,10 +13,12 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(async (config) => {
   const token = await storage.getItem("token");
+  console.log("config", config);
   if (
     token &&
     !(config.url?.includes("/login") || config.url?.includes("/signup"))
   ) {
+    console.log("token", token);
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;

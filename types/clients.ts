@@ -44,4 +44,6 @@ export type InitialState = {
   loading: boolean;
   allClients: AllClientsData[];
   error: string;
+  newClientData: any;
+  updateClientData: any;
 }

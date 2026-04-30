@@ -15,9 +15,13 @@ export default function ClientsLayout() {
         headerTitleAlign: "left", // "left" | "center"
       }}
     >
-      <Stack.Screen name="index" options={{ title: "Clients", headerShown: false }}/>
+      <Stack.Screen
+        name="index"
+        options={{ title: "Clients", headerShown: false }}
+      />
       <Stack.Screen name="new" options={{ title: "Add Client" }} />
-      <Stack.Screen name="[id]" options={{ title: "Edit Client" }} />
+      <Stack.Screen name="[id]/edit" options={{ title: "Edit Client" }} />
+      <Stack.Screen name="[id]" options={{ title: "Client Details" }} />
     </Stack>
   );
 }
