@@ -1,4 +1,4 @@
-import { profileApi } from "@/config/api/profile";
+import { profileApi } from "@/services/profile";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { profileDetails } from "./profileTypes";
 

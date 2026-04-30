@@ -6,12 +6,12 @@ import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
-import { logout } from "./redux/features/auth/authSlice";
+import { logout } from "../redux/features/auth/authSlice";
 import {
   getLoading,
   getProfileDetail,
-} from "./redux/features/profile/profileSlice";
-import { profileThunk } from "./redux/features/profile/profileThunks";
+} from "../redux/features/profile/profileSlice";
+import { profileThunk } from "../redux/features/profile/profileThunks";
 import theme from "./theme/theme";
 
 export default function Profile() {
@@ -62,30 +62,42 @@ export default function Profile() {
             {isLoading ? (
               <Text>Loading...</Text>
             ) : (
-              <View style={{marginTop: 20}}>
+              <View style={{ marginTop: 20 }}>
                 <View style={styles.detail}>
                   <Text style={styles.detailLable}>Name:</Text>
-                  <Text style={styles.detailValue}>{profileDetails?.ownerName}</Text>
-                  </View>
-                  <View style={styles.detail}>
+                  <Text style={styles.detailValue}>
+                    {profileDetails?.ownerName}
+                  </Text>
+                </View>
+                <View style={styles.detail}>
                   <Text style={styles.detailLable}>Phone:</Text>
-                  <Text style={styles.detailValue}>{profileDetails?.phone}</Text>
-                  </View>
-                  <View style={styles.detail}>
+                  <Text style={styles.detailValue}>
+                    {profileDetails?.phone}
+                  </Text>
+                </View>
+                <View style={styles.detail}>
                   <Text style={styles.detailLable}>Address:</Text>
-                  <Text style={styles.detailValue}>{profileDetails?.address}</Text>
-                  </View>
-                  <View style={styles.detail}>
+                  <Text style={styles.detailValue}>
+                    {profileDetails?.address}
+                  </Text>
+                </View>
+                <View style={styles.detail}>
                   <Text style={styles.detailLable}>Gym Name:</Text>
-                  <Text style={styles.detailValue}>{profileDetails?.gymName}</Text>
-                  </View>
-                  <View style={styles.detail}>
+                  <Text style={styles.detailValue}>
+                    {profileDetails?.gymName}
+                  </Text>
+                </View>
+                <View style={styles.detail}>
                   <Text style={styles.detailLable}>Plan:</Text>
-                  <Text style={styles.detailValue}>{profileDetails?.subscriptionPlan}</Text>
-                  </View>
-                  <View style={styles.detail}>
+                  <Text style={styles.detailValue}>
+                    {profileDetails?.subscriptionPlan}
+                  </Text>
+                </View>
+                <View style={styles.detail}>
                   <Text style={styles.detailLable}>Status:</Text>
-                  <Text style={styles.detailValue}>{profileDetails?.subscriptionStatus}</Text>
+                  <Text style={styles.detailValue}>
+                    {profileDetails?.subscriptionStatus}
+                  </Text>
                 </View>
               </View>
             )}
@@ -109,14 +121,14 @@ const styles = StyleSheet.create({
   detail: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   detailLable: {
     fontSize: 20,
-    fontWeight: 500
+    fontWeight: 500,
   },
   detailValue: {
     fontSize: 20,
-    fontWeight: 500
-  }
+    fontWeight: 500,
+  },
 });

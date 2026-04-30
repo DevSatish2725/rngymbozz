@@ -1,7 +1,10 @@
 import { Redirect } from "expo-router";
 import { ActivityIndicator, View } from "react-native";
 import { useSelector } from "react-redux";
-import { isAuthenticated, loadingState } from "./redux/features/auth/authSlice";
+import {
+  isAuthenticated,
+  loadingState,
+} from "../redux/features/auth/authSlice";
 
 export default function Index() {
   const isAllowed = useSelector(isAuthenticated);

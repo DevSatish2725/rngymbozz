@@ -32,7 +32,10 @@ const MAPPING = {
   'banknote.fill': 'payments',
   'plus': 'add',
   'magnifyingglass': 'search',
-  'line.horizontal.3.decrease.circle.fill': 'filter-alt'
+  'line.horizontal.3.decrease.circle.fill': 'filter-alt',
+  'pencil.circle.fill': 'edit',
+  'trash': 'delete',
+  'chevron.left': 'arrow-back'
 } as IconMapping;
 
 /**

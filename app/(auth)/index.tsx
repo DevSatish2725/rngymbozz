@@ -22,10 +22,10 @@ import {
   clearAuthError,
   loadingState,
   user,
-} from "../redux/features/auth/authSlice";
-import authThunks from "../redux/features/auth/authThunks";
-import { getProfileDetail } from "../redux/features/profile/profileSlice";
-import { profileThunk } from "../redux/features/profile/profileThunks";
+} from "../../redux/features/auth/authSlice";
+import authThunks from "../../redux/features/auth/authThunks";
+import { getProfileDetail } from "../../redux/features/profile/profileSlice";
+import { profileThunk } from "../../redux/features/profile/profileThunks";
 
 export default function Login() {
   const [loginDetails, setLoginDetails] = useState({

@@ -11,6 +11,7 @@ import { ScreenHeader } from "@/components/ScreenHeader";
 import { ThemedView } from "@/components/themed-view";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { router } from "expo-router";
+import AppHeader from "@/components/AppHeader";
 
 type DashboardSection =
   | { type: "stats" }
@@ -128,6 +129,7 @@ export default function Dashboard() {
   };
   return (
     <ThemedView style={{ flex: 1 }}>
+      <AppHeader />
       <ScreenHeader screenName="Dashboard" />
       <FlatList
         data={sections}

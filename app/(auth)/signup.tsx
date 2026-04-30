@@ -22,8 +22,8 @@ import {
   clearAuthError,
   loadingState,
   signupUser,
-} from "../redux/features/auth/authSlice";
-import authThunks from "../redux/features/auth/authThunks";
+} from "../../redux/features/auth/authSlice";
+import authThunks from "../../redux/features/auth/authThunks";
 export default function Signup() {
   const [signupDetails, setSignupDetails] = useState({
     ownerName: "",

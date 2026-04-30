@@ -71,8 +71,13 @@ const authSlice = createSlice({
   },
 });
 
-export const { loading, setAuthenticated, logout, finishLoading, clearAuthError } =
-  authSlice.actions;
+export const {
+  loading,
+  setAuthenticated,
+  logout,
+  finishLoading,
+  clearAuthError,
+} = authSlice.actions;
 export const loadingState = (state: { auth: AuthState }) => state.auth.loading;
 export const user = (state: { auth: AuthState }) => state.auth.user;
 export const signupUser = (state: { auth: AuthState }) => state.auth.signupUser;

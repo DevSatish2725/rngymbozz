@@ -1,8 +1,11 @@
 import storage from "@/config/storage";
-import { useEffect } from "react";
 import useAppDispatch from "@/hooks/use-dispatch";
+import { useEffect } from "react";
 
-import { finishLoading, setAuthenticated } from "./redux/features/auth/authSlice";
+import {
+  finishLoading,
+  setAuthenticated,
+} from "../redux/features/auth/authSlice";
 
 export default function AppInitializer() {
   const dispatch = useAppDispatch();
@@ -13,7 +16,7 @@ export default function AppInitializer() {
       if (token) {
         dispatch(setAuthenticated(token));
       } else {
-          dispatch(finishLoading())
+        dispatch(finishLoading());
       }
     };
 

@@ -23,13 +23,17 @@ axiosInstance.interceptors.request.use(async (config) => {
 });
 
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
     if (
       error.response?.status === 401 &&
-      !(originalRequest.url?.includes("/login") ||
-        originalRequest.url?.includes("/signup"))
+      !(
+        originalRequest.url?.includes("/login") ||
+        originalRequest.url?.includes("/signup")
+      )
     ) {
       await SecureStore.deleteItemAsync("token");
       // dispatch logout here

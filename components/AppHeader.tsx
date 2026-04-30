@@ -1,10 +1,10 @@
-import {
-  getProfileDetail,
-  updateProfileDetail,
-} from "@/app/redux/features/profile/profileSlice";
 import theme from "@/app/theme/theme";
 import storage from "@/config/storage";
 import useAppDispatch from "@/hooks/use-dispatch";
+import {
+  getProfileDetail,
+  updateProfileDetail,
+} from "@/redux/features/profile/profileSlice";
 import { getDaysBetweenDates } from "@/utils/getDaysBetweenDate";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -69,7 +69,9 @@ export default function AppHeader() {
             style={styles.profileIconContainer}
             onPress={() => router.push("/profile")}
           >
-            <Text style={{color: "#fff", fontSize: 20, fontWeight: 600}}>{profileDetails?.ownerName?.charAt(0)}</Text>
+            <Text style={{ color: "#fff", fontSize: 20, fontWeight: 600 }}>
+              {profileDetails?.ownerName?.charAt(0)}
+            </Text>
             {/* <IconSymbol size={28} name="person.fill" color={"#fff"} /> */}
           </TouchableOpacity>
         </View>
