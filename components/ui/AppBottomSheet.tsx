@@ -1,37 +1,53 @@
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-import { forwardRef } from "react";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
+import { forwardRef, useCallback } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 type Props = {
   clientName: string;
-  onDelete: () => void;
+  onSuccess: () => void;
   onCancel: () => void;
+  title?: string;
+  subtitle?: string;
+  successBtnText?: string;
+  cancelBtnText?: string;
 };
 
-const DeleteBottomSheet = forwardRef<BottomSheet, Props>(
-  ({ clientName, onDelete, onCancel }, ref) => {
+const AppBottomSheet = forwardRef<BottomSheet, Props>(
+  ({ clientName, onSuccess, onCancel, title, subtitle, successBtnText, cancelBtnText }, ref) => {
+    const renderBackdrop = useCallback(
+      (props: any) => (
+        <BottomSheetBackdrop
+          {...props}
+          disappearsOnIndex={-1}
+          appearsOnIndex={0}
+          onPress={onCancel} // close on outside click
+        />
+      ),
+      [onCancel],
+    );
     return (
       <BottomSheet
         ref={ref}
-        index={-1} // hidden by default
+        index={-1}
         snapPoints={["30%"]}
         enablePanDownToClose
         onClose={onCancel}
+        backdropComponent={renderBackdrop} // 👈 add this
         backgroundStyle={styles.background}
         handleIndicatorStyle={styles.handle}
       >
         <BottomSheetView style={styles.container}>
-          <Text style={styles.title}>Delete {clientName}?</Text>
-          <Text style={styles.subtitle}>
-            All membership data and payment history will be permanently removed.
-          </Text>
-
-          <TouchableOpacity style={styles.deleteBtn} onPress={onDelete}>
-            <Text style={styles.deleteBtnText}>Delete permanently</Text>
+          {title ? <Text style={styles.title}>{title}</Text> : null}
+          {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+          <TouchableOpacity style={styles.deleteBtn} onPress={onSuccess}>
+            <Text style={styles.deleteBtnText}>{successBtnText}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.cancelBtn} onPress={onCancel}>
-            <Text style={styles.cancelBtnText}>Cancel</Text>
+            <Text style={styles.cancelBtnText}>{cancelBtnText}</Text>
           </TouchableOpacity>
         </BottomSheetView>
       </BottomSheet>
@@ -39,9 +55,9 @@ const DeleteBottomSheet = forwardRef<BottomSheet, Props>(
   },
 );
 
-DeleteBottomSheet.displayName = "DeleteBottomSheet";
+AppBottomSheet.displayName = "AppBottomSheet";
 
-export default DeleteBottomSheet;
+export default AppBottomSheet;
 
 const styles = StyleSheet.create({
   background: {

@@ -1,11 +1,11 @@
 import AppButton from "@/components/AppButton";
 import AppHeader from "@/components/AppHeader";
 import ClientsList from "@/components/clients/ClientsList";
-import DeleteBottomSheet from "@/components/clients/DeleteBottomSheet";
 import Filter from "@/components/clients/Filter";
 import { FILTER, SEARCH_BY_NAME_AND_PHONE } from "@/components/clients/utils";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { ThemedView } from "@/components/themed-view";
+import AppBottomSheet from "@/components/ui/AppBottomSheet";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import useAppDispatch from "@/hooks/use-dispatch";
 import BottomSheet from "@gorhom/bottom-sheet";
@@ -134,11 +134,15 @@ export default function Clients() {
           onEdit={clientEditHandler}
           onDelete={clientDeleteHandler}
         />
-        <DeleteBottomSheet
+        <AppBottomSheet
           ref={deleteSheetRef}
           clientName={"Temp"}
-          onDelete={handleDeleteConfirm}
+          onSuccess={handleDeleteConfirm}
           onCancel={handleDeleteCancel}
+          title={"Delete Client?"}
+          subtitle="All membership data and payment history will be permanently removed."
+          successBtnText="Delete permanently"
+          cancelBtnText="Cancel"
         />
       </View>
     </ThemedView>
