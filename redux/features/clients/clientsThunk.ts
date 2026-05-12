@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   addNewClients,
+  deleteClient,
   getAllClients,
   updateClient,
 } from "../../../services/clients";
@@ -23,6 +24,14 @@ export const updateClientThunk = createAsyncThunk(
   async ({ payload, clientId }: any) => {
     console.log("update thunk");
     const response = await updateClient(payload, clientId);
+    return response.data;
+  },
+);
+
+export const deleteClientThunk = createAsyncThunk(
+  "clients/delete",
+  async (payload: number | null) => {
+    const response = await deleteClient(payload);
     return response.data;
   },
 );

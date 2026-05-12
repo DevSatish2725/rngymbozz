@@ -17,6 +17,10 @@ export const updateClient = async (payload: any, clientId: any) => {
 
 export const getSingleClient = async () => {
   const response = await axiosInstance.get("/clients/get/6");
-  console.log("response", response.data);
   return response;
-}
+};
+
+export const deleteClient = async (payload: number | null) => {
+  const response = await axiosInstance.delete(`/clients/${payload}`);
+  return response;
+};

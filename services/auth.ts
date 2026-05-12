@@ -2,7 +2,6 @@ import axiosInstance from "../config/axios";
 import { LoginPayload, SignupPayload } from "../types/auth";
 
 const login = async (payload: LoginPayload) => {
-  console.log("login api response");
   const response = await axiosInstance.post("/auth/login", payload);
   return response;
 };

@@ -45,5 +45,7 @@ export type InitialState = {
   allClients: AllClientsData[];
   error: string;
   newClientData: any;
+  clientID: number | null;
   updateClientData: any;
+  deleteClientData: string;
 }

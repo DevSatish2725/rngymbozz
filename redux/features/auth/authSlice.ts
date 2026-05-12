@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import authThunks from "./authThunks";
-import { AuthState } from "./authTypes";
+import { AuthState } from "../../../types/auth";
 
 const initialState: AuthState = {
   user: null,
@@ -59,12 +59,10 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(authThunks.signup.fulfilled, (state, action) => {
-        console.log("Signup fulfilled with payload:", action.payload);
         state.loading = false;
         state.signupUser = action.payload;
       })
       .addCase(authThunks.signup.rejected, (state, action) => {
-        console.log("Signup rejected with error:", action.payload);
         state.loading = false;
         state.error = action.payload || "Signup failed";
       });

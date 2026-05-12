@@ -1,7 +1,10 @@
 import theme from "@/app/theme/theme";
-import { allClientsStateFn } from "@/redux/features/clients/clientsSlice";
+import {
+  allClientsStateFn,
+  clientIDStateFn,
+} from "@/redux/features/clients/clientsSlice";
 import { AllClientsData } from "@/types/clients";
-import { router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import React from "react";
 import {
   ScrollView,
@@ -63,15 +66,10 @@ const SectionCard = ({
 const ViewClient = () => {
   const allClientsData = useSelector(allClientsStateFn);
   const insets = useSafeAreaInsets();
-  const params = useLocalSearchParams();
-  const id = Array.isArray(params.id) ? params.id[0] : params.id;
+  const clientID = useSelector(clientIDStateFn);
   const matchedClientData = allClientsData.find(
-    (client: AllClientsData) => Number(client.id) === Number(id),
+    (client: AllClientsData) => Number(client.id) === Number(clientID),
   );
-
-  //   useEffect(() => {
-  //     getSingleClient();
-  //   }, []);
 
   if (matchedClientData !== -1) {
     const {
@@ -190,9 +188,7 @@ const ViewClient = () => {
           {/* Edit button */}
           <TouchableOpacity
             style={styles.editBtn}
-            onPress={() =>
-              router.push({ pathname: "/clients/[id]/edit", params: { id } })
-            }
+            onPress={() => router.push("/clients/[id]/edit")}
           >
             <Text style={styles.editBtnText}>Edit Client</Text>
           </TouchableOpacity>

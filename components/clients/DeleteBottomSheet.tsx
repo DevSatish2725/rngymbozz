@@ -1,6 +1,6 @@
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-import { forwardRef, useCallback } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { forwardRef } from "react";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 type Props = {
   clientName: string;
@@ -13,7 +13,7 @@ const DeleteBottomSheet = forwardRef<BottomSheet, Props>(
     return (
       <BottomSheet
         ref={ref}
-        index={-1}                        // hidden by default
+        index={-1} // hidden by default
         snapPoints={["30%"]}
         enablePanDownToClose
         onClose={onCancel}
@@ -36,8 +36,10 @@ const DeleteBottomSheet = forwardRef<BottomSheet, Props>(
         </BottomSheetView>
       </BottomSheet>
     );
-  }
+  },
 );
+
+DeleteBottomSheet.displayName = "DeleteBottomSheet";
 
 export default DeleteBottomSheet;
 

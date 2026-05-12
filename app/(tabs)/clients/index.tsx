@@ -1,26 +1,34 @@
 import AppButton from "@/components/AppButton";
 import AppHeader from "@/components/AppHeader";
 import ClientsList from "@/components/clients/ClientsList";
+import DeleteBottomSheet from "@/components/clients/DeleteBottomSheet";
 import Filter from "@/components/clients/Filter";
 import { FILTER, SEARCH_BY_NAME_AND_PHONE } from "@/components/clients/utils";
 import { ScreenHeader } from "@/components/ScreenHeader";
 import { ThemedView } from "@/components/themed-view";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import useAppDispatch from "@/hooks/use-dispatch";
+import BottomSheet from "@gorhom/bottom-sheet";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
 import SearchInput from "../../../components/clients/SearchInput";
 import {
   allClientsStateFn,
+  clearDeleteData,
+  clientIDStateFn,
+  deleteClientDataStateFn,
   loadingStateFn,
+  setClientID,
 } from "../../../redux/features/clients/clientsSlice";
-import { allClientsThunk } from "../../../redux/features/clients/clientsThunk";
+import {
+  allClientsThunk,
+  deleteClientThunk,
+} from "../../../redux/features/clients/clientsThunk";
 import { AllClientsData, FilterStatus } from "../../../types/clients";
 import theme from "../../theme/theme";
-import DeleteBottomSheet from "@/components/clients/DeleteBottomSheet";
-import BottomSheet from "@gorhom/bottom-sheet";
 
 export default function Clients() {
   const [search, setSearch] = useState("");
@@ -29,16 +37,35 @@ export default function Clients() {
   const dispatch = useAppDispatch();
   const loading = useSelector(loadingStateFn);
   const allClientsData = useSelector(allClientsStateFn);
-   const deleteSheetRef = useRef<BottomSheet>(null);
+  const clientID = useSelector(clientIDStateFn);
+  const deleteData = useSelector(deleteClientDataStateFn);
+  const deleteSheetRef = useRef<BottomSheet>(null);
 
   useEffect(() => {
     dispatch(allClientsThunk());
+    return () => {
+      dispatch(clearDeleteData());
+    };
   }, []);
   useEffect(() => {
     if (allClientsData.length) {
       setShowClientsData(allClientsData);
     }
   }, [allClientsData]);
+  useEffect(() => {
+    if (deleteData) {
+      Toast.show({
+        type: "success",
+        text1: deleteData,
+      });
+    }
+  }, [deleteData]);
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     console.log("Screen is focused");
+  //     dispatch(allClientsThunk());
+  //   }, []),
+  // );
   const addNewClientHandler = () => {
     router.push("/clients/new");
   };
@@ -53,30 +80,22 @@ export default function Clients() {
     setFilter(value);
   };
   const clientViewHandler = (client: AllClientsData) => {
-    router.push({
-      pathname: "/clients/[id]",
-      params: { id: client.id },
-    });
+    dispatch(setClientID(client.id));
+    router.push("/clients/[id]");
   };
   const clientEditHandler = (client: AllClientsData) => {
-    router.push({
-      pathname: "/clients/[id]/edit",
-      params: { id: client.id },
-    });
-  };
-
-  const handleDeletePress = () => {
-       // open sheet
+    dispatch(setClientID(client.id));
+    router.push("/clients/[id]/edit");
   };
 
   const handleDeleteConfirm = async () => {
     deleteSheetRef.current?.close();
-    // await dispatch(deleteClient(id));
-    router.dismissAll();
-    router.push("/(tabs)/clients");
+    await dispatch(deleteClientThunk(clientID));
   };
   const clientDeleteHandler = (client: AllClientsData) => {
-    deleteSheetRef.current?.expand();  
+    dispatch(setClientID(client.id));
+    dispatch(clearDeleteData());
+    deleteSheetRef.current?.expand();
   };
   const handleDeleteCancel = () => {
     deleteSheetRef.current?.close();
@@ -116,11 +135,11 @@ export default function Clients() {
           onDelete={clientDeleteHandler}
         />
         <DeleteBottomSheet
-        ref={deleteSheetRef}
-        clientName={"Temp"}
-        onDelete={handleDeleteConfirm}
-        onCancel={handleDeleteCancel}
-      />
+          ref={deleteSheetRef}
+          clientName={"Temp"}
+          onDelete={handleDeleteConfirm}
+          onCancel={handleDeleteCancel}
+        />
       </View>
     </ThemedView>
   );

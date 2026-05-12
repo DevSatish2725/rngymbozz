@@ -1,7 +1,9 @@
 import theme from "@/app/theme/theme";
-import React from "react";
+import React, { useRef } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
+import ReanimatedSwipeable, {
+  SwipeableMethods,
+} from "react-native-gesture-handler/ReanimatedSwipeable";
 import {
   AllClientsData,
   ClientCardProps,
@@ -38,10 +40,25 @@ export default function ClientCard({
   onEdit,
   onDelete,
 }: ClientCardProps) {
+  const swipeableRef = useRef<SwipeableMethods>(null);
+  const handleEdit = () => {
+    swipeableRef.current?.close();
+    onEdit(client);
+  };
+
+  const handleDelete = () => {
+    swipeableRef.current?.close();
+    onDelete(client);
+  };
   return (
     <ReanimatedSwipeable
+      ref={swipeableRef}
       renderRightActions={() => (
-        <RightActions client={client} onEdit={onEdit} onDelete={onDelete} />
+        <RightActions
+          client={client}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
       )}
       overshootRight={false}
     >

@@ -24,6 +24,7 @@ import {
   signupUser,
 } from "../../redux/features/auth/authSlice";
 import authThunks from "../../redux/features/auth/authThunks";
+import { allowOnlyNumbers, validateEmail, validateIndianPhone } from "@/utils/regex";
 export default function Signup() {
   const [signupDetails, setSignupDetails] = useState({
     ownerName: "",
@@ -57,11 +58,6 @@ export default function Signup() {
     setSignupDetails((prev) => ({ ...prev, [key]: text }));
   };
 
-  const validateEmail = (email: string) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
-
   const validatePassword = (password: string) => {
     if (!/[A-Z]/.test(password)) {
       return "Password must contain at least one uppercase letter";
@@ -82,13 +78,6 @@ export default function Signup() {
     return null;
   };
 
-  const validateIndianPhone = (phone: string) => {
-    const regex = /^[6-9]\d{9}$/;
-    return regex.test(phone);
-  };
-  const allowOnlyNumbers = (value: string) => {
-    return value.replace(/\D/g, "");
-  };
   const handleSignup = async () => {
     let hasEmailError = false;
     let hasPasswordError = false;

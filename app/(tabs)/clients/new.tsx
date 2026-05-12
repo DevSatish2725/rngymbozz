@@ -1,20 +1,20 @@
 import ClientForm from "@/components/clients/ClientForm";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { clientIDStateFn } from "@/redux/features/clients/clientsSlice";
+import { Stack } from "expo-router";
 import React from "react";
 import { StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 
 export default function AddClient() {
-  const { id } = useLocalSearchParams();
-  const isEditing = id;
-  console.log("id", id);
+  const clientID = useSelector(clientIDStateFn);
   return (
     <>
       <Stack.Screen
         options={{
-          title: isEditing ? "Edit Client" : "Add Client",
+          title: clientID ? "Edit Client" : "Add Client",
         }}
       />
-      <ClientForm clientId={isEditing ? id : undefined} />
+      <ClientForm />
     </>
   );
 }

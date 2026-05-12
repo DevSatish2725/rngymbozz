@@ -3,6 +3,7 @@ import { InitialState } from "../../../types/clients";
 import {
   addNewClientThunk,
   allClientsThunk,
+  deleteClientThunk,
   updateClientThunk,
 } from "./clientsThunk";
 
@@ -11,7 +12,9 @@ const initialState: InitialState = {
   allClients: [],
   error: "",
   newClientData: {},
+  clientID: null,
   updateClientData: {},
+  deleteClientData: "",
 };
 
 const clientsSlice = createSlice({
@@ -22,6 +25,12 @@ const clientsSlice = createSlice({
       state.newClientData = {};
       state.updateClientData = {};
     },
+    setClientID: (state, action) => {
+      state.clientID = action.payload;
+    },
+    clearDeleteData: (state) => {
+      state.deleteClientData = "";
+    },
   },
   extraReducers: (builder) =>
     builder
@@ -31,11 +40,9 @@ const clientsSlice = createSlice({
       .addCase(allClientsThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.allClients = action.payload;
-        console.log("action payload clients", action.payload);
       })
       .addCase(allClientsThunk.rejected, (state, action) => {
         state.loading = false;
-        console.log("action payload clients error", action.payload);
       })
       .addCase(addNewClientThunk.pending, (state) => {
         state.loading = true;
@@ -58,6 +65,17 @@ const clientsSlice = createSlice({
       .addCase(updateClientThunk.rejected, (state, action) => {
         state.loading = false;
         // state.error = action.payload
+      })
+      .addCase(deleteClientThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.deleteClientData = action.payload;
+        state.allClients = state.allClients.filter(
+          (client) => client.id !== state.clientID,
+        );
+      })
+      .addCase(deleteClientThunk.rejected, (state, action) => {
+        state.loading = false;
+        // state.error = action.payload
       }),
 });
 
@@ -66,7 +84,10 @@ export const allClientsStateFn = (state: any) => state.clients.allClients;
 export const newClientDataStateFn = (state: any) => state.clients.newClientData;
 export const updateClientDataStateFn = (state: any) =>
   state.clients.updateClientData;
+export const deleteClientDataStateFn = (state: any) =>
+  state.clients.deleteClientData;
+export const clientIDStateFn = (state: any) => state.clients.clientID;
 
-export const { clearState } = clientsSlice.actions;
+export const { clearState, setClientID, clearDeleteData } = clientsSlice.actions;
 
 export default clientsSlice.reducer;
