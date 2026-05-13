@@ -2,8 +2,10 @@ import AppButton from "@/components/AppButton";
 import AppHeader from "@/components/AppHeader";
 import ClientsList from "@/components/clients/ClientsList";
 import Filter from "@/components/clients/Filter";
+import ShimmerCard from "@/components/clients/ShimmerCard";
 import { FILTER, SEARCH_BY_NAME_AND_PHONE } from "@/components/clients/utils";
 import { ScreenHeader } from "@/components/ScreenHeader";
+import ShimmerFlashList from "@/components/ShimmerFlashList";
 import { ThemedView } from "@/components/themed-view";
 import AppBottomSheet from "@/components/ui/AppBottomSheet";
 import { IconSymbol } from "@/components/ui/icon-symbol";
@@ -11,7 +13,7 @@ import useAppDispatch from "@/hooks/use-dispatch";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
 import SearchInput from "../../../components/clients/SearchInput";
@@ -60,12 +62,7 @@ export default function Clients() {
       });
     }
   }, [deleteData]);
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     console.log("Screen is focused");
-  //     dispatch(allClientsThunk());
-  //   }, []),
-  // );
+
   const addNewClientHandler = () => {
     router.push("/clients/new");
   };
@@ -128,15 +125,27 @@ export default function Clients() {
         </View>
         <SearchInput searchHandler={searchHandler} value={search} />
         <Filter filter={filter} filterHandler={filterHandler} />
-        <ClientsList
-          clients={showClientsData}
-          onPress={clientViewHandler}
-          onEdit={clientEditHandler}
-          onDelete={clientDeleteHandler}
-        />
+        {loading ? (
+          <View style={{ flex: 1 }}>
+            <ShimmerFlashList
+              itemCount={4}
+              estimatedItemSize={80}
+              renderShimmerCard={({ translateX, screenWidth }) => {
+                const w = screenWidth - 32;
+                return <ShimmerCard translateX={translateX} screenWidth={w} />;
+              }}
+            />
+          </View>
+        ) : (
+          <ClientsList
+            clients={showClientsData}
+            onPress={clientViewHandler}
+            onEdit={clientEditHandler}
+            onDelete={clientDeleteHandler}
+          />
+        )}
         <AppBottomSheet
           ref={deleteSheetRef}
-          clientName={"Temp"}
           onSuccess={handleDeleteConfirm}
           onCancel={handleDeleteCancel}
           title={"Delete Client?"}
@@ -148,28 +157,3 @@ export default function Clients() {
     </ThemedView>
   );
 }
-
-const styles = StyleSheet.create({
-  filterContainer: {
-    flexDirection: "row",
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    backgroundColor: "#f0f0f0",
-    borderWidth: 1,
-    borderColor: "#e2e8f0",
-    borderRadius: 12,
-  },
-  tableHeader: { flexDirection: "row", marginVertical: 16, gap: 12 },
-  tableHeaderTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  tableRow: {
-    flexDirection: "row",
-    marginVertical: 16,
-    gap: 40,
-  },
-  tableRowData: {
-    fontSize: 12,
-  },
-});

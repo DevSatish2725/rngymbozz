@@ -63,15 +63,18 @@ export default function ClientCard({
       overshootRight={false}
     >
       <TouchableOpacity style={styles.card} onPress={() => onPress(client)}>
-        <View style={styles.avatarRow}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>
-              {client.name.charAt(0).toUpperCase()}
-            </Text>
-          </View>
-          <View style={{ flex: 1 }}>
+        <View style={styles.avatar}>
+          <Text style={styles.avatarText}>
+            {client.name.charAt(0).toUpperCase()}
+          </Text>
+        </View>
+        <View style={styles.textBlock}>
+          <View>
             <Text style={styles.name}>{client.name}</Text>
             <Text style={styles.contact}>{client.phone}</Text>
+            <Text style={styles.expiry}>
+              Expires: {client.membershipEndDate ?? "N/A"}
+            </Text>
           </View>
           <View
             style={[
@@ -84,9 +87,6 @@ export default function ClientCard({
             </Text>
           </View>
         </View>
-        <Text style={styles.expiry}>
-          Expires: {client.membershipEndDate ?? "N/A"}
-        </Text>
       </TouchableOpacity>
     </ReanimatedSwipeable>
   );
@@ -101,11 +101,14 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: "#e5e7eb",
-  },
-  avatarRow: {
     flexDirection: "row",
-    alignItems: "center",
     gap: 12,
+  },
+  textBlock: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    flex: 1,
   },
   avatar: {
     width: 42,
@@ -142,7 +145,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: "#6b7280",
     marginTop: 8,
-    marginLeft: 54,
   },
   swipeActions: {
     flexDirection: "row",

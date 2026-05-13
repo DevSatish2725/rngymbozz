@@ -6,7 +6,6 @@ import { forwardRef, useCallback } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 type Props = {
-  clientName: string;
   onSuccess: () => void;
   onCancel: () => void;
   title?: string;
@@ -16,7 +15,10 @@ type Props = {
 };
 
 const AppBottomSheet = forwardRef<BottomSheet, Props>(
-  ({ clientName, onSuccess, onCancel, title, subtitle, successBtnText, cancelBtnText }, ref) => {
+  (
+    { onSuccess, onCancel, title, subtitle, successBtnText, cancelBtnText },
+    ref,
+  ) => {
     const renderBackdrop = useCallback(
       (props: any) => (
         <BottomSheetBackdrop
@@ -38,6 +40,8 @@ const AppBottomSheet = forwardRef<BottomSheet, Props>(
         backdropComponent={renderBackdrop} // 👈 add this
         backgroundStyle={styles.background}
         handleIndicatorStyle={styles.handle}
+        style={{ zIndex: 999 }} // 👈
+        containerStyle={{ zIndex: 999 }}
       >
         <BottomSheetView style={styles.container}>
           {title ? <Text style={styles.title}>{title}</Text> : null}

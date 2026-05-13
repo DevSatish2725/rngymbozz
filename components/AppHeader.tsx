@@ -6,8 +6,9 @@ import {
   updateProfileDetail,
 } from "@/redux/features/profile/profileSlice";
 import { getDaysBetweenDates } from "@/utils/getDaysBetweenDate";
+import BottomSheet from "@gorhom/bottom-sheet";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   StyleSheet,
@@ -24,6 +25,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function AppHeader() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const bottomSheetRef = useRef<BottomSheet>(null);
   const router = useRouter();
   const profileDetails = useSelector(getProfileDetail);
   const dispatch = useAppDispatch();
@@ -38,13 +40,20 @@ export default function AppHeader() {
     }
   };
   const openModalHandler = () => {
+    // bottomSheetRef.current?.expand();
     setIsModalOpen(true);
   };
+  const closeBottomSheet = () => {
+    bottomSheetRef.current?.close();
+  };
+
   const closeModalHandler = () => {
     setIsModalOpen(false);
   };
+
   const goToBilling = () => {
     setIsModalOpen(false);
+    // bottomSheetRef.current?.close();
     router.push("/billing");
   };
   return (
@@ -130,6 +139,16 @@ export default function AppHeader() {
           </View>
         </View>
       </AppModal>
+      {/* <AppBottomSheet
+        ref={bottomSheetRef}
+        onSuccess={goToBilling}
+        onCancel={closeBottomSheet}
+        subtitle={
+          "Your free trial expires in 13 days. Upgrade to Pro to keep growing."
+        }
+        successBtnText="View Plans"
+        cancelBtnText="Close"
+      /> */}
     </View>
   );
 }
