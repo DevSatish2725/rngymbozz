@@ -3,7 +3,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import { AllClientsData, ClientListProps } from "../../types/clients";
 import ClientCard from "./ClientCard";
-function ClientsList({ clients, onPress, onEdit, onDelete }: ClientListProps) {
+function ClientsList({ clients, onPress, onEdit, onDelete, onPay }: ClientListProps) {
   return (
     <View style={{ flex: 1 }}>
       {clients.length ? (
@@ -15,6 +15,7 @@ function ClientsList({ clients, onPress, onEdit, onDelete }: ClientListProps) {
               onPress={onPress}
               onEdit={onEdit}
               onDelete={onDelete}
+              onPay={onPay}
             />
           )}
           keyExtractor={(item) => String(item.id)}

@@ -25,6 +25,7 @@ export type ClientListProps = {
   onPress: (client: AllClientsData) => void;
   onEdit: (client: AllClientsData) => void;
   onDelete: (client: AllClientsData) => void;
+  onPay: (client: AllClientsData) => void;
 };
 
 export type ClientCardProps = {
@@ -32,12 +33,14 @@ export type ClientCardProps = {
   onPress: (client: AllClientsData) => void;
   onEdit: (client: AllClientsData) => void;
   onDelete: (client: AllClientsData) => void;
+  onPay: (client: AllClientsData) => void;
 };
 
 export type RightActionProps = {
   client: AllClientsData;
   onEdit: (client: AllClientsData) => void;
   onDelete: (client: AllClientsData) => void;
+  onPay: (client: AllClientsData) => void;
 };
 
 export type InitialState = {

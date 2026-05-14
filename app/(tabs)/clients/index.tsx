@@ -97,6 +97,9 @@ export default function Clients() {
   const handleDeleteCancel = () => {
     deleteSheetRef.current?.close();
   };
+  const clientPaymentHandler = (client: AllClientsData) => {
+    console.log("Payment for client:", client);
+  };
   return (
     <ThemedView style={{ flex: 1 }}>
       <AppHeader />
@@ -142,6 +145,7 @@ export default function Clients() {
             onPress={clientViewHandler}
             onEdit={clientEditHandler}
             onDelete={clientDeleteHandler}
+            onPay={clientPaymentHandler}
           />
         )}
         <AppBottomSheet

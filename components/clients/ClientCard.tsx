@@ -39,6 +39,7 @@ export default function ClientCard({
   onPress,
   onEdit,
   onDelete,
+  onPay
 }: ClientCardProps) {
   const swipeableRef = useRef<SwipeableMethods>(null);
   const handleEdit = () => {
@@ -58,6 +59,7 @@ export default function ClientCard({
           client={client}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onPay={onPay}
         />
       )}
       overshootRight={false}
@@ -68,7 +70,7 @@ export default function ClientCard({
             {client.name.charAt(0).toUpperCase()}
           </Text>
         </View>
-        <View style={styles.textBlock}>
+        {/* <View style={styles.textBlock}>
           <View>
             <Text style={styles.name}>{client.name}</Text>
             <Text style={styles.contact}>{client.phone}</Text>
@@ -86,7 +88,27 @@ export default function ClientCard({
               {client.status}
             </Text>
           </View>
-        </View>
+        </View> */}
+        <View style={styles.textBlock}>
+  <View>
+    <Text style={styles.name}>{client.name}</Text>
+    <Text style={styles.contact}>{client.phone}</Text>
+    <Text style={styles.expiry}>Expires: {client.membershipEndDate ?? "N/A"}</Text>
+  </View>
+
+  <View style={styles.rightColumn}>
+    <View style={[styles.badge, { backgroundColor: STATUS_COLOR[client.status] }]}>
+      <Text style={[styles.badgeText, { color: "#fff" }]}>{client.status}</Text>
+    </View>
+    <TouchableOpacity
+      style={styles.payBtn}
+      onPress={() => onPay(client)}       // stop propagation not needed — RN handles it
+    >
+      <IconSymbol size={16} name="dollarsign.circle.fill" color="#16a34a" />
+      <Text style={styles.payText}>Pay</Text>
+    </TouchableOpacity>
+  </View>
+</View>
       </TouchableOpacity>
     </ReanimatedSwipeable>
   );
@@ -158,4 +180,23 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginLeft: 6,
   },
+  rightColumn: {
+  alignItems: "flex-end",
+  gap: 8,
+},
+payBtn: {
+  flexDirection: "row",
+  alignItems: "center",
+  gap: 4,
+  paddingHorizontal: 10,
+  paddingVertical: 4,
+  borderRadius: 20,
+  borderWidth: 1,
+  borderColor: "#16a34a",
+},
+payText: {
+  fontSize: 12,
+  fontWeight: "600",
+  color: "#16a34a",
+},
 });
