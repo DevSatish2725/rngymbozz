@@ -35,7 +35,17 @@ const MAPPING = {
   'line.horizontal.3.decrease.circle.fill': 'filter-alt',
   'pencil.circle.fill': 'edit',
   'trash': 'delete',
-  'chevron.left': 'arrow-back'
+  'chevron.left': 'arrow-back',
+  'clock.fill': 'schedule',
+  'chevron.down': 'keyboard-arrow-down',
+  'xmark': 'close',
+  'infinity': 'all-inclusive',
+  'calendar.badge.clock': 'event-available',
+  'clock.arrow.circlepath': 'history',
+  'chart.line.uptrend.xyaxis': 'show-chart',
+   'bolt.fill': 'bolt',
+  'banknote': 'payments',
+  'building.columns.fill': 'account-balance',
 } as IconMapping;
 
 /**
