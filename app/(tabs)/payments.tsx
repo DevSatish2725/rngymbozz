@@ -13,7 +13,7 @@ import PaymentTimeFilter from "@/components/payment/PaymentTimeFIlter";
 import PaymentTopUI from "@/components/payment/PaymentTopUI";
 import TimeFilterBottomSheet from "@/components/payment/TimeFilterBottomSheet";
 import { TIME_OPTIONS_DETAILS } from "@/constants/payment";
-import { getDaysBetweenDates } from "@/utils/getDaysBetweenDate";
+import { getDaysBetweenDates } from "@/utils/common";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { router } from "expo-router";
 

@@ -5,7 +5,7 @@ import {
   getProfileDetail,
   updateProfileDetail,
 } from "@/redux/features/profile/profileSlice";
-import { getDaysBetweenDates } from "@/utils/getDaysBetweenDate";
+import { getDaysBetweenDates } from "@/utils/common";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";

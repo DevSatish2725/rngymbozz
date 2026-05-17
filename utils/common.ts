@@ -8,3 +8,10 @@ export const getDaysBetweenDates = (date1: Date, date2: string) => {
 
   return diffDays;
 };
+
+export const currentTime = () =>
+  new Date().toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });

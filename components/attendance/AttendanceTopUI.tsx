@@ -3,7 +3,13 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { IconSymbol } from "../ui/icon-symbol";
 
-const AttendanceTopUI = () => {
+const AttendanceTopUI = ({
+  memberInsideCount,
+  checkedInCount,
+}: {
+  memberInsideCount: number;
+  checkedInCount: number;
+}) => {
   const renderCurrentTime = () => {
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, "0");
@@ -11,17 +17,29 @@ const AttendanceTopUI = () => {
     return `${hours}:${minutes}`;
   };
   return (
-    <View style={styles.headerRow}>
-      <View style={styles.headerLeft}>
-        <Text style={styles.screenSub}>
-          Check-in, check-out &amp; workout duration
-        </Text>
+    <View style={{ gap: 16 }}>
+      <View style={styles.headerRow}>
+        <View style={styles.headerLeft}>
+          <Text style={styles.screenSub}>
+            Check-in, check-out &amp; workout duration
+          </Text>
+        </View>
+        <View style={styles.timeBadge}>
+          <IconSymbol name="clock" size={15} color={theme.colors.primary} />
+          <View>
+            <Text style={styles.timeBadgeLabel}>{"CURRENT\nTIME"}</Text>
+            <Text style={styles.timeBadgeValue}>{renderCurrentTime()}</Text>
+          </View>
+        </View>
       </View>
-      <View style={styles.timeBadge}>
-        <IconSymbol name="clock" size={15} color={theme.colors.primary} />
-        <View>
-          <Text style={styles.timeBadgeLabel}>{"CURRENT\nTIME"}</Text>
-          <Text style={styles.timeBadgeValue}>{renderCurrentTime()}</Text>
+      <View style={styles.statsRow}>
+        <View style={styles.statCard}>
+          <Text style={styles.statCount}>{memberInsideCount}</Text>
+          <Text style={styles.statLabel}>MEMBERS INSIDE</Text>
+        </View>
+        <View style={styles.statCard}>
+          <Text style={styles.statCount}>{checkedInCount}</Text>
+          <Text style={styles.statLabel}>CHECKED IN TODAY</Text>
         </View>
       </View>
     </View>
@@ -74,5 +92,32 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     color: "#111827",
+  },
+  statsRow: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    borderWidth: 0.5,
+    borderColor: "#e5e7eb",
+    paddingVertical: 20,
+    alignItems: "center",
+    gap: 6,
+  },
+  statCount: {
+    fontSize: 40,
+    fontWeight: "700",
+    color: theme.colors.primary,
+    lineHeight: 46,
+  },
+  statLabel: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "#6b7280",
+    letterSpacing: 0.6,
+    textAlign: "center",
   },
 });
