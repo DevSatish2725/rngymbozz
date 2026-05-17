@@ -1,10 +1,20 @@
+import { RootState } from "@/redux/store";
+import { InitialState } from "@/types/profile";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { profileThunk } from "./profileThunks";
-import { error, profileDetails, screenState } from "./profileTypes";
 
-const initialState = {
+const initialState: InitialState = {
   loading: false,
-  details: {},
+  details: {
+    ownerName: "",
+    gymName: "",
+    id: 0,
+    subscriptionPlan: "",
+    subscriptionStatus: "Active",
+    address: "",
+    phone: "",
+    trialEndDate:""
+  },
   error: "",
 };
 
@@ -13,24 +23,27 @@ const profileSlice = createSlice({
   initialState,
   reducers: {
     updateProfileDetail: (state, action) => {
-      state.details = action.payload
-    }
+      state.details = action.payload;
+    },
   },
   extraReducers: (builder: any) => {
     builder
-      .addCase(profileThunk.pending, (state: screenState) => {
+      .addCase(profileThunk.pending, (state: InitialState) => {
         state.loading = true;
       })
       .addCase(
         profileThunk.fulfilled,
-        (state: screenState, action: PayloadAction<profileDetails>) => {
+        (
+          state: InitialState,
+          action: PayloadAction<InitialState["details"]>,
+        ) => {
           state.loading = false;
           state.details = action.payload;
         },
       )
       .addCase(
         profileThunk.rejected,
-        (state: screenState, action: PayloadAction<error>) => {
+        (state: InitialState, action: PayloadAction<InitialState["error"]>) => {
           state.loading = false;
           state.error = action.payload || "Failed to fetch profile details.";
         },
@@ -39,9 +52,7 @@ const profileSlice = createSlice({
 });
 
 export const { updateProfileDetail } = profileSlice.actions;
-export const getProfileDetail = (state: { profile: screenState }) =>
-  state.profile.details;
-export const getLoading = (state: { profile: screenState }) =>
-  state.profile.loading;
+export const getProfileDetail = (state: RootState) => state.profile.details;
+export const getLoading = (state: RootState) => state.profile.loading;
 
 export default profileSlice.reducer;

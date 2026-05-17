@@ -104,7 +104,7 @@ export default function AppHeader() {
         >
           <Text style={styles.plan}>{profileDetails?.subscriptionPlan}</Text>
           <Text>
-            {getDaysBetweenDates(new Date(), profileDetails?.trialEndDate)} days
+            {getDaysBetweenDates(new Date(), profileDetails.trialEndDate)} days
           </Text>
         </View>
       </View>

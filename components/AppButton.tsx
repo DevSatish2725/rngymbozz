@@ -9,6 +9,8 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { IconSymbol } from "./ui/icon-symbol";
+import { SFSymbols7_0 } from "sf-symbols-typescript";
 
 interface AppButtonProps {
   title: string;
@@ -24,7 +26,8 @@ interface AppButtonProps {
     borderWidth?: number;
     borderColor?: string;
   };
-  icon?: ReactNode;
+  icon?: SFSymbols7_0;
+  iconSize?: number;
 }
 
 const AppButton: React.FC<AppButtonProps> = ({
@@ -37,6 +40,7 @@ const AppButton: React.FC<AppButtonProps> = ({
   width,
   customStyle,
   icon,
+  iconSize
 }) => {
   return (
     <TouchableOpacity
@@ -55,8 +59,12 @@ const AppButton: React.FC<AppButtonProps> = ({
         <ActivityIndicator color="#fff" />
       ) : (
         <View style={styles.buttonContentContainer}>
-          {icon ?? null}
-          <Text style={[styles.text, textStyle, { color: customStyle?.color }]}>
+            {icon ? <IconSymbol
+              name={icon}
+              color={customStyle?.color || "#fff"}
+              size={iconSize}
+            /> : null}
+          <Text style={textStyle}>
             {title}
           </Text>
         </View>
@@ -72,11 +80,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  buttonContentContainer: { flexDirection: "row", alignItems: "center" },
-  text: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
+  buttonContentContainer: { flexDirection: "row", alignItems: "center", gap: 6 },
   disabled: {
     opacity: 0.6,
   },

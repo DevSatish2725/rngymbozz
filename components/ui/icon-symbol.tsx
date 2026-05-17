@@ -46,6 +46,12 @@ const MAPPING = {
    'bolt.fill': 'bolt',
   'banknote': 'payments',
   'building.columns.fill': 'account-balance',
+  'phone.fill': 'phone',
+  'mappin.and.ellipse': 'location-on',
+  'building.2.fill': 'apartment',
+  'crown.fill': 'workspace-premium',
+  'checkmark.seal.fill': 'verified',
+  'rectangle.portrait.and.arrow.right': 'logout',
 } as IconMapping;
 
 /**
