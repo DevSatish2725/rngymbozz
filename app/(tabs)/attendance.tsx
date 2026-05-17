@@ -1,13 +1,16 @@
 import AppHeader from "@/components/AppHeader";
 import { ScreenHeader } from "@/components/ScreenHeader";
+import ShimmerFlashList from "@/components/ShimmerFlashList";
 import AttendanceActivity from "@/components/attendance/AttendanceActivity";
 import AttendanceCheckIn from "@/components/attendance/AttendanceCheckIn";
 import AttendanceSegmentControl from "@/components/attendance/AttendanceSegmentControl";
+import AttendanceShimmerCard from "@/components/attendance/AttendanceShimmerCard";
 import AttendanceTopUI from "@/components/attendance/AttendanceTopUI";
 import { ThemedView } from "@/components/themed-view";
 import useAppDispatch from "@/hooks/use-dispatch";
 import {
   allClientsAttendanceStateFn,
+  isLoadingStateFn,
   updateAllClientsAttendance,
 } from "@/redux/features/attendance/attendanceSlice";
 import { allClientsThunk } from "@/redux/features/attendance/attendanceThunks";
@@ -29,6 +32,7 @@ export default function AttendanceDeskScreen() {
 
   const dispatch = useAppDispatch();
 
+  const isLoading = useSelector(isLoadingStateFn);
   const allClientsAttendance = useSelector(allClientsAttendanceStateFn);
 
   useEffect(() => {
@@ -103,7 +107,21 @@ export default function AttendanceDeskScreen() {
           activeSegment={activeSegment}
           onSegmentChange={onSegmentChange}
         />
-        {activeSegment === "check-in" ? (
+        {isLoading ? (
+          <ShimmerFlashList
+            itemCount={2}
+            estimatedItemSize={2}
+            renderShimmerCard={({ translateX, screenWidth }) => {
+              const w = screenWidth - 32;
+              return (
+                <AttendanceShimmerCard
+                  translateX={translateX}
+                  screenWidth={w}
+                />
+              );
+            }}
+          />
+        ) : activeSegment === "check-in" ? (
           <AttendanceCheckIn
             searchQuery={searchQuery}
             onSearchChange={onSearchChange}

@@ -48,6 +48,8 @@ const attendanceSlice = createSlice({
   },
 });
 
+
+export const isLoadingStateFn = (state: RootState) => state.attendance.isLoading;
 export const allClientsAttendanceStateFn = (state: RootState) =>
   state.attendance.allClientsAttendance;
 
