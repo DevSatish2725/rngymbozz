@@ -20,8 +20,7 @@ export default function Billing({ onSelectPlan }: BillingProps) {
 
   return (
     <ThemedView style={{ flex: 1 }}>
-      <AppHeader />
-      <ScreenHeader screenName="Billing" />
+      <AppHeader pageName="Billing"/>
       <ScrollView
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}

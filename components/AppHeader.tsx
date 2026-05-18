@@ -2,32 +2,26 @@ import theme from "@/app/theme/theme";
 import storage from "@/config/storage";
 import useAppDispatch from "@/hooks/use-dispatch";
 import {
+  closePlanWarning,
+  showPlanWarningStateFn,
+} from "@/redux/common/commonSlice";
+import {
   getProfileDetail,
   updateProfileDetail,
 } from "@/redux/features/profile/profileSlice";
 import { getDaysBetweenDates } from "@/utils/common";
-import BottomSheet from "@gorhom/bottom-sheet";
 import { useRouter } from "expo-router";
-import { useEffect, useRef, useState } from "react";
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 import AppButton from "./AppButton";
-import AppModal from "./ui/AppModal";
 import { IconSymbol } from "./ui/icon-symbol";
 
-const { width, height } = Dimensions.get("window");
-
-export default function AppHeader() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const bottomSheetRef = useRef<BottomSheet>(null);
+export default function AppHeader({ pageName }: { pageName: string }) {
+  const [showWarning, setShowWarning] = useState(true);
   const router = useRouter();
   const profileDetails = useSelector(getProfileDetail);
+  const showPlanWarning = useSelector(showPlanWarningStateFn);
   const dispatch = useAppDispatch();
   useEffect(() => {
     getProfileDetails();
@@ -39,40 +33,41 @@ export default function AppHeader() {
       dispatch(updateProfileDetail(convertToNormalObj));
     }
   };
-  const openModalHandler = () => {
-    // bottomSheetRef.current?.expand();
-    setIsModalOpen(true);
-  };
-  const closeBottomSheet = () => {
-    bottomSheetRef.current?.close();
-  };
 
-  const closeModalHandler = () => {
-    setIsModalOpen(false);
+  const handleCloseWarning = () => {
+    dispatch(closePlanWarning());
   };
 
   const goToBilling = () => {
-    setIsModalOpen(false);
-    // bottomSheetRef.current?.close();
+    setShowWarning(false);
     router.push("/billing");
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.topHeader}>
-        <View style={styles.iconContainer}>
-          <IconSymbol
-            size={28}
-            name="square.grid.2x2"
-            color={theme.colors.primary}
-          />
-          <Text style={styles.title}>GymBoss</Text>
+    <View>
+      <View style={styles.container}>
+        <View style={styles.gymlogo}>
+          <IconSymbol name={"building.2.fill"} size={22} color={"#fff"} />
         </View>
-        <View style={styles.profileContainer}>
-          <View style={styles.profileTextContainer}>
-            <Text style={{ fontSize: 18, fontWeight: 600 }}>
-              {profileDetails?.ownerName}
-            </Text>
-            <Text style={{ color: "gray" }}>{profileDetails?.phone}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flex: 1,
+          }}
+        >
+          <View style={{ gap: 4 }}>
+            <View
+              style={{ flexDirection: "row", gap: 8, alignItems: "center" }}
+            >
+              <Text style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>
+                {profileDetails?.ownerName}
+              </Text>
+              <Text style={{ fontSize: 12, color: "#fff" }}>
+                {profileDetails?.subscriptionPlan}
+              </Text>
+            </View>
+            <Text style={{ fontSize: 12, color: "#f1f1f1" }}>{pageName}</Text>
           </View>
           <TouchableOpacity
             style={styles.profileIconContainer}
@@ -81,146 +76,122 @@ export default function AppHeader() {
             <Text style={{ color: "#fff", fontSize: 20, fontWeight: 600 }}>
               {profileDetails?.ownerName?.charAt(0)}
             </Text>
-            {/* <IconSymbol size={28} name="person.fill" color={"#fff"} /> */}
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.bottomHeader}>
-        <View style={{ flexDirection: "row", gap: 4, alignItems: "center" }}>
-          <Text style={{ paddingLeft: 12, fontSize: 18, fontWeight: 600 }}>
-            {profileDetails?.gymName}
-          </Text>
-          <TouchableOpacity onPress={openModalHandler}>
-            <IconSymbol size={28} name="info.circle" color={"#feb179"} />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            paddingRight: 12,
-            flexDirection: "row",
-            gap: 8,
-            alignItems: "center",
-          }}
-        >
-          <Text style={styles.plan}>{profileDetails?.subscriptionPlan}</Text>
-          <Text>
-            {getDaysBetweenDates(new Date(), profileDetails.trialEndDate)} days
-          </Text>
-        </View>
-      </View>
-      <AppModal isOpen={isModalOpen}>
-        <View style={styles.modalContentArea}>
-          <Text style={{ color: "#973c00", fontSize: 16, textAlign: "center" }}>
-            Your free trial expires in 13 days. Upgrade to Pro to keep growing.
-          </Text>
+      {showPlanWarning ? (
+        <View style={styles.warningContentArea}>
+          <View style={styles.warningClockIcon}>
+            <IconSymbol name={"clock.fill"} size={18} color={"#a03c07"} />
+          </View>
           <View
-            style={{ flexDirection: "row", justifyContent: "center", gap: 8 }}
+            style={{
+              gap: 12,
+              width: 300,
+            }}
           >
-            <AppButton
-              title="View Plans"
-              onPress={goToBilling}
-              customStyle={{
-                backgroundColor: theme.colors.primary,
-                color: "#fff",
-                borderWidth: 1,
-                borderColor: theme.colors.primary,
+            {profileDetails.subscriptionPlan ? (
+              <View>
+                <Text
+                  style={{
+                    color: "#a03c07",
+                    fontSize: 14,
+                  }}
+                >
+                  Upgrade to keep access after plan ends.
+                </Text>
+              </View>
+            ) : (
+              <Text
+                style={{
+                  color: "#a03c07",
+                  fontSize: 14,
+                }}
+              >
+                {`Your free trial expires in ${getDaysBetweenDates(new Date(), profileDetails.trialEndDate)} days. Upgrade to Pro to keep growing.`}
+              </Text>
+            )}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 8,
               }}
-            />
-            <AppButton
-              title="Close"
-              onPress={closeModalHandler}
-              customStyle={{
-                backgroundColor: "#fff",
-                color: theme.colors.primary,
-                borderWidth: 1,
-                borderColor: theme.colors.primary,
-              }}
-            />
+            >
+              <AppButton
+                title={"View Plans"}
+                onPress={goToBilling}
+                customStyle={{
+                  color: "#fff",
+                  borderWidth: 1,
+                  borderColor: "#000",
+                }}
+              />
+              <TouchableOpacity
+                onPress={handleCloseWarning}
+                style={styles.warningCloseIcon}
+              >
+                <IconSymbol name={"xmark"} size={18} color="#000" />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </AppModal>
-      {/* <AppBottomSheet
-        ref={bottomSheetRef}
-        onSuccess={goToBilling}
-        onCancel={closeBottomSheet}
-        subtitle={
-          "Your free trial expires in 13 days. Upgrade to Pro to keep growing."
-        }
-        successBtnText="View Plans"
-        cancelBtnText="Close"
-      /> */}
+      ) : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 50,
-    paddingBottom: 20,
-    backgroundColor: "#fff",
-  },
-  topHeader: {
+    paddingTop: 40,
+    paddingBottom: 10,
+    paddingHorizontal: 16,
+    backgroundColor: theme.colors.primary,
     flexDirection: "row",
+    gap: 6,
+  },
+  gymlogo: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    backgroundColor: "#9598ec9e",
+    justifyContent: "center",
     alignItems: "center",
-    justifyContent: "space-between",
-    borderBottomColor: "#e1e1e1",
-    borderBottomWidth: 1,
-    paddingBottom: 12,
-  },
-  bottomHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingTop: 12,
-  },
-  iconContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 2,
-    paddingLeft: 12,
-  },
-  title: {
-    color: theme.colors.primary,
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  profileContainer: {
-    flexDirection: "row",
-    gap: 7,
-    paddingRight: 12,
-  },
-  profileTextContainer: {
-    alignItems: "flex-end",
   },
   profileIconContainer: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 12,
     backgroundColor: theme.colors.primary,
     justifyContent: "center",
     alignItems: "center",
-    boxShadow: "0px 4px 8px rgba(0,0,0,0.15)",
     // Elevation for Android
     elevation: 5,
   },
-  plan: {
-    borderWidth: 1,
-    borderRadius: 16,
-    borderColor: "#fef3c6",
-    padding: 6,
-    color: "#bb4d00",
-    backgroundColor: "#fffbeb",
-  },
-  modalContentArea: {
-    width: width * 0.8,
-    height: height * 0.3,
-    borderRadius: 10,
+  warningContentArea: {
     padding: 12,
-    borderColor: theme.colors.primary,
-    borderWidth: 1,
-    boxShadow: "0px 4px 8px rgba(0,0,0,0.15)",
-    backgroundColor: "#fffbeb",
-    justifyContent: "center",
+    paddingHorizontal: 16,
+    backgroundColor: "#fdea9f",
     gap: 16,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  warningClockIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: "#f7ae42",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  warningCloseIcon: {
+    width: 40,
+    height: 52,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#000",
+    borderRadius: 10,
   },
 });

@@ -1,10 +1,8 @@
-import AppButton from "@/components/AppButton";
 import AppHeader from "@/components/AppHeader";
 import ClientsList from "@/components/clients/ClientsList";
 import Filter from "@/components/clients/Filter";
 import ShimmerCard from "@/components/clients/ShimmerCard";
 import { FILTER, SEARCH_BY_NAME_AND_PHONE } from "@/components/clients/utils";
-import { ScreenHeader } from "@/components/ScreenHeader";
 import ShimmerFlashList from "@/components/ShimmerFlashList";
 import { ThemedView } from "@/components/themed-view";
 import AppBottomSheet from "@/components/ui/AppBottomSheet";
@@ -13,7 +11,7 @@ import useAppDispatch from "@/hooks/use-dispatch";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
 import SearchInput from "../../../components/clients/SearchInput";
@@ -102,8 +100,7 @@ export default function Clients() {
   };
   return (
     <ThemedView style={{ flex: 1 }}>
-      <AppHeader />
-      <ScreenHeader screenName="Clients" />
+      <AppHeader pageName="Clients" />
       <View style={{ flex: 1, padding: 12 }}>
         <View
           style={{
@@ -115,16 +112,14 @@ export default function Clients() {
           <Text style={{ fontSize: 16, fontWeight: "600" }}>
             Member Directory
           </Text>
-          <AppButton
-            title="Add New Client"
+          <TouchableOpacity
+            style={styles.logBtn}
             onPress={addNewClientHandler}
-            customStyle={{
-              backgroundColor: theme.colors.primary,
-              color: "#fff",
-            }}
-            icon={<IconSymbol size={28} name="plus" color={"#fff"} />}
-            width={180}
-          />
+            activeOpacity={0.85}
+          >
+            <IconSymbol name="plus" size={15} color="#fff" />
+            <Text style={styles.logBtnText}>Add new client</Text>
+          </TouchableOpacity>
         </View>
         <SearchInput searchHandler={searchHandler} value={search} />
         <Filter filter={filter} filterHandler={filterHandler} />
@@ -161,3 +156,20 @@ export default function Clients() {
     </ThemedView>
   );
 }
+
+const styles = StyleSheet.create({
+  logBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 10,
+  },
+  logBtnText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#fff",
+  },
+});

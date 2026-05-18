@@ -1,5 +1,4 @@
 import AppHeader from "@/components/AppHeader";
-import { ScreenHeader } from "@/components/ScreenHeader";
 import ShimmerFlashList from "@/components/ShimmerFlashList";
 import AttendanceActivity from "@/components/attendance/AttendanceActivity";
 import AttendanceCheckIn from "@/components/attendance/AttendanceCheckIn";
@@ -96,8 +95,7 @@ export default function AttendanceDeskScreen() {
 
   return (
     <ThemedView style={{ flex: 1 }}>
-      <AppHeader />
-      <ScreenHeader screenName="Attendance" />
+      <AppHeader pageName="Attendance"/>
       <View style={{ padding: 16, gap: 12, flex: 1 }}>
         <AttendanceTopUI
           memberInsideCount={stats.checkIn - stats.checkOut}

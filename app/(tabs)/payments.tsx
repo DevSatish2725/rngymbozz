@@ -160,8 +160,7 @@ export default function PaymentsScreen() {
   };
   return (
     <ThemedView style={{ flex: 1 }}>
-      <AppHeader />
-      <ScreenHeader screenName="Payments" />
+      <AppHeader pageName="Payments"/>
       <View style={styles.headerUI}>
         <PaymentTopUI
           total={filteredPayments.reduce((acc, cum) => acc + cum.amount, 0)}

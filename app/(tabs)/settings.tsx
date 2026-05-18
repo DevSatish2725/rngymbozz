@@ -183,8 +183,7 @@ const Settings = () => {
 
   return (
     <ThemedView style={{ flex: 1 }}>
-      <AppHeader />
-      <ScreenHeader screenName="Settings" />
+      <AppHeader pageName="Settings"/>
       <ScrollView style={{ flex: 1 }}>
         <View style={{ padding: 16 }}>
           <AppInput
