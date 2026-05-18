@@ -4,7 +4,9 @@ import InfoRow from "@/components/profile/InfoRow";
 import ProfileShimmer from "@/components/profile/ProfileShimmer";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import storage from "@/config/storage";
+import { STATUS_CONFIG } from "@/constants/profile";
 import useAppDispatch from "@/hooks/use-dispatch";
+import { getInitials } from "@/utils/common";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -23,8 +25,6 @@ import {
   getProfileDetail,
 } from "../redux/features/profile/profileSlice";
 import { profileThunk } from "../redux/features/profile/profileThunks";
-import { STATUS_CONFIG } from "@/constants/profile";
-import { getInitials } from "@/utils/common";
 
 export default function ProfileScreen() {
   const [loading, setLoading] = useState(false);

@@ -52,6 +52,10 @@ const MAPPING = {
   'crown.fill': 'workspace-premium',
   'checkmark.seal.fill': 'verified',
   'rectangle.portrait.and.arrow.right': 'logout',
+   'figure.walk': 'directions-walk',
+  'person.3.fill': 'groups',
+  'person.fill.checkmark': 'person-add-alt-1',
+  'indianrupeesign.circle.fill': 'currency-rupee',
 } as IconMapping;
 
 /**

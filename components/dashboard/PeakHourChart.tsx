@@ -1,148 +1,124 @@
-import { Dimensions, StyleSheet, Text, View } from "react-native";
-import { LineChart } from "react-native-chart-kit";
+import theme from "@/app/theme/theme";
+import { PeakHour } from "@/types/dashboart";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { IconSymbol } from "../ui/icon-symbol";
+import PeakBar from "./PeakBar";
+const DEFAULT_PEAK_HOURS: PeakHour[] = [
+  { label: "6A", percentage: 28 },
+  { label: "7A", percentage: 52 },
+  { label: "8A", percentage: 78 },
+  { label: "9A", percentage: 40 },
+  { label: "12P", percentage: 22 },
+  { label: "5P", percentage: 35 },
+  { label: "6P", percentage: 62 },
+  { label: "7P", percentage: 100 },
+  { label: "8P", percentage: 85 },
+  { label: "9P", percentage: 48 },
+];
 
-const screenWidth = Dimensions.get("window").width;
-
-export default function PeakHourChart() {
-  // Hour-wise data (0–23)
-  const hourlyData = [
-    // { hour: 0, value: 10 },
-    // { hour: 1, value: 5 },
-    // { hour: 2, value: 2 },
-    // { hour: 3, value: 1 },
-    // { hour: 4, value: 3 },
-    { hour: 5, value: 6 },
-    { hour: 6, value: 15 },
-    { hour: 7, value: 25 },
-    { hour: 8, value: 40 },
-    { hour: 9, value: 55 },
-    { hour: 10, value: 60 },
-    { hour: 11, value: 75 },
-    { hour: 12, value: 90 },
-    { hour: 13, value: 85 },
-    { hour: 14, value: 70 },
-    { hour: 15, value: 65 },
-    { hour: 16, value: 80 },
-    { hour: 17, value: 95 }, // 🔥 Peak
-    { hour: 18, value: 88 },
-    { hour: 19, value: 72 },
-    { hour: 20, value: 50 },
-    { hour: 21, value: 40 },
-    { hour: 22, value: 30 },
-    { hour: 23, value: 20 },
-  ];
-
-  const maxValue = Math.max(...hourlyData.map((d) => d.value));
-  const peakHours = hourlyData.filter((d) => d.value === maxValue);
-  // Format hour
-  const formatHour = (h: number) => `${h % 12 || 12} ${h < 12 ? "AM" : "PM"}`;
-  // Chart data
-  const chartData = {
-    labels: hourlyData.map((d) => d.hour.toString()),
-    datasets: [
-      {
-        data: hourlyData.map((d) => d.value),
-      },
-    ],
-  };
-
-  // Chart config
-  const chartConfig = {
-    backgroundGradientFrom: "#F8F9FF",
-    backgroundGradientTo: "#F8F9FF",
-
-    decimalPlaces: 0,
-
-    // Line color (primary)
-    color: (opacity = 1) => `rgba(91, 95, 239, ${opacity})`,
-
-    // Label color
-    labelColor: (opacity = 1) => `rgba(80, 80, 120, ${opacity})`,
-
-    // Dot styling
-    propsForDots: {
-      r: "4",
-      strokeWidth: "2",
-      stroke: "#5B5FEF",
-      fill: "#ffffff",
-    },
-
-    // Grid lines
-    propsForBackgroundLines: {
-      stroke: "#E6E8FF",
-      strokeDasharray: "", // solid line
-    },
-  };
-
+const PeakHourChart = () => {
+  const maxPct = Math.max(...DEFAULT_PEAK_HOURS.map((h) => h.percentage));
+  const peakLabel = "7–8 PM";
   return (
-    <View>
-      {/* Peak Hour Display */}
-      <View style={styles.peakContainer}>
-        <Text style={styles.peakTitle}>Peak Hour(s)</Text>
-        {peakHours.map((p) => (
-          <Text key={p.hour} style={styles.peakText}>
-            {formatHour(p.hour)} - {formatHour(p.hour + 1)} ({p.value})
-          </Text>
+    <View style={styles.card}>
+      <View style={styles.cardHeader}>
+        <View>
+          <Text style={styles.cardTitle}>Peak hours</Text>
+          <Text style={styles.cardSub}>{`Today's hourly footfall`}</Text>
+        </View>
+        <View style={styles.peakBadge}>
+          <IconSymbol name="flame.fill" size={12} color="#4f46e5" />
+          <Text style={styles.peakBadgeText}>Peak: {peakLabel}</Text>
+        </View>
+      </View>
+      <View style={styles.barsContainer}>
+        {DEFAULT_PEAK_HOURS.map((h) => (
+          <PeakBar key={h.label} item={h} maxPct={maxPct} />
         ))}
       </View>
-      <View style={styles.chartContainer}>
-        <LineChart
-          data={chartData}
-          width={screenWidth - 55}
-          height={250}
-          chartConfig={chartConfig}
-          bezier
-          style={styles.chart}
-        />
+      <View style={styles.legend}>
+        {[
+          { color: theme.colors.primary, label: "High" },
+          { color: "#c7d2fe", label: "Moderate" },
+          { color: "#e0e7ff", label: "Low" },
+        ].map((l) => (
+          <View key={l.label} style={styles.legendItem}>
+            <View style={[styles.legendDot, { backgroundColor: l.color }]} />
+            <Text style={styles.legendText}>{l.label}</Text>
+          </View>
+        ))}
       </View>
     </View>
   );
-}
+};
+
+export default PeakHourChart;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 50,
-    padding: 10,
-    backgroundColor: "#f5f5f5",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  chartContainer: {
-    marginVertical: 16,
-    padding: 12,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-
-    // shadow (iOS)
-    shadowColor: "#5B5FEF",
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-
-    // elevation (Android)
-    elevation: 4,
-  },
-  chart: {
-    borderRadius: 12,
-    backgroundColor: "rgba(91,95,239,1)",
-  },
-  peakContainer: {
-    marginTop: 20,
-    padding: 10,
+  // Card
+  card: {
     backgroundColor: "#fff",
-    borderRadius: 10,
+    borderRadius: 16,
+    borderWidth: 0.5,
+    borderColor: "#e5e7eb",
+    padding: 14,
   },
-  peakTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 5,
+  cardHeader: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    marginBottom: 16,
   },
-  peakText: {
+  cardTitle: {
     fontSize: 14,
-    marginVertical: 2,
+    fontWeight: "600",
+    color: "#111827",
+    marginBottom: 2,
+  },
+  cardSub: {
+    fontSize: 12,
+    color: "#6b7280",
+  },
+  legend: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+    marginTop: 12,
+  },
+  legendItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+  legendDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  legendText: {
+    fontSize: 11,
+    color: "#6b7280",
+  },
+  // Peak hours
+  peakBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    backgroundColor: "#eeedfe",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  peakBadgeText: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: "#4f46e5",
+  },
+  barsContainer: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    height: 80,
+    gap: 5,
   },
 });
