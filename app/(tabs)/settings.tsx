@@ -1,12 +1,11 @@
 import AppButton from "@/components/AppButton";
 import AppHeader from "@/components/AppHeader";
 import AppInput from "@/components/AppInput";
-import { ScreenHeader } from "@/components/ScreenHeader";
 import { ThemedView } from "@/components/themed-view";
 import { getProfileDetail } from "@/redux/features/profile/profileSlice";
 import { validateEmail, validateIndianPhone } from "@/utils/regex";
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useSelector } from "react-redux";
 import theme from "../theme/theme";
 
@@ -183,7 +182,7 @@ const Settings = () => {
 
   return (
     <ThemedView style={{ flex: 1 }}>
-      <AppHeader pageName="Settings"/>
+      <AppHeader pageName="Settings" />
       <ScrollView style={{ flex: 1 }}>
         <View style={{ padding: 16 }}>
           <AppInput
@@ -243,8 +242,8 @@ const Settings = () => {
             onPress={handleSubmit}
             customStyle={{
               backgroundColor: theme.colors.primary,
-              color: "#fff",
             }}
+            textStyle={{ color: "#fff" }}
           />
         </View>
       </ScrollView>
@@ -253,5 +252,3 @@ const Settings = () => {
 };
 
 export default Settings;
-
-const styles = StyleSheet.create({});

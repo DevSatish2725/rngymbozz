@@ -1,7 +1,6 @@
 import storage from "@/config/storage";
 import useAppDispatch from "@/hooks/use-dispatch";
 import { useEffect } from "react";
-import * as ExpoSplashScreen from "expo-splash-screen";
 
 import {
   finishLoading,
