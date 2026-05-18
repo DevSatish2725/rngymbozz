@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import theme from "@/app/theme/theme";
+import { IconSymbol } from "./ui/icon-symbol";
 
 interface AppInputProps extends TextInputProps {
   label?: string;
@@ -34,7 +35,12 @@ export default function AppInput({
               {...props}
             />
             <TouchableOpacity onPress={() => setSecureText(!secureText)}>
-              <Text style={styles.toggle}>{secureText ? "Show" : "Hide"}</Text>
+              <IconSymbol
+                    name={secureText ? "eye.slash.fill" : "eye.fill"}
+                    size={16}
+                    color="#9ca3af"
+                  />
+              {/* <Text style={styles.toggle}>{secureText ? "Show" : "Hide"}</Text> */}
             </TouchableOpacity>
           </>
         ) : (

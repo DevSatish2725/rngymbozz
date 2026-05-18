@@ -1,6 +1,7 @@
 import theme from "@/app/theme/theme";
 import AppButton from "@/components/AppButton";
 import AppInput from "@/components/AppInput";
+import { IconSymbol } from "@/components/ui/icon-symbol";
 import storage from "@/config/storage";
 import useAppDispatch from "@/hooks/use-dispatch";
 import { router } from "expo-router";
@@ -128,6 +129,8 @@ export default function Login() {
     router.replace("/(tabs)");
   };
 
+  const onForgotPassword = () => {};
+
   useEffect(() => {
     if (userDetails && userDetails.token) {
       fetchProfileDetails(userDetails.token);
@@ -153,48 +156,69 @@ export default function Login() {
       <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{ flex: 1 }}
+          style={styles.kav}
         >
           <ScrollView contentContainerStyle={styles.scrollContainer}>
-            <View style={styles.container}>
-              <Text style={styles.companyName}>GymBoss</Text>
-              <View style={styles.contentContainer}>
-                <Text style={styles.title}>Welcome Back</Text>
-                <AppInput
-                  label="Email Address"
-                  error={loginErrors.email}
-                  value={loginDetails.email}
-                  onChangeText={(text) => inputChangeHandler("email", text)}
-                  keyboardType="email-address"
-                  type="text"
-                  placeholder="owner@gym.com"
-                />
-                <AppInput
-                  label="Password"
-                  error={loginErrors.password}
-                  value={loginDetails.password}
-                  onChangeText={(text) => inputChangeHandler("password", text)}
-                  type="password"
-                  placeholder="abcdG12@"
-                />
-                <AppButton
-                  title="Login"
-                  onPress={handleLogin}
-                  loading={loading}
-                />
-                <View style={styles.footerContainer}>
-                  <Text style={styles.footer}>New Gym Owner?</Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      dispatch(clearAuthError());
-                      Toast.hide();
-                      router.push("/signup");
-                    }}
-                  >
-                    <Text style={styles.link}>Start 14-day free trial?</Text>
-                  </TouchableOpacity>
+            <View style={styles.hero}>
+              {/* Logo row */}
+              <View style={styles.logoRow}>
+                <View style={styles.logoIcon}>
+                  <IconSymbol
+                    name="square.grid.2x2.fill"
+                    size={20}
+                    color="#fff"
+                  />
                 </View>
+                <Text style={styles.logoName}>GymBoss</Text>
               </View>
+              <Text style={styles.heroTitle}>Welcome back</Text>
+              <Text style={styles.heroSub}>Sign in to manage your gym</Text>
+            </View>
+            <View style={styles.form}>
+              <AppInput
+                label="Email Address"
+                error={loginErrors.email}
+                value={loginDetails.email}
+                onChangeText={(text) => inputChangeHandler("email", text)}
+                keyboardType="email-address"
+                type="text"
+                placeholder="owner@gym.com"
+              />
+              <AppInput
+                label="Password"
+                error={loginErrors.password}
+                value={loginDetails.password}
+                onChangeText={(text) => inputChangeHandler("password", text)}
+                type="password"
+                placeholder="abcdG12@"
+              />
+              <TouchableOpacity
+                style={styles.forgotBtn}
+                onPress={onForgotPassword}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.forgotText}>Forgot password?</Text>
+              </TouchableOpacity>
+              <AppButton
+                title="Login"
+                onPress={handleLogin}
+                loading={loading}
+                customStyle={styles.loginBtn}
+                textStyle={styles.textStyle}
+              />
+            </View>
+            <View style={styles.footer}>
+              <Text style={styles.footerText}>New Gym Owner? </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  dispatch(clearAuthError());
+                  Toast.hide();
+                  router.push("/signup");
+                }}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.footerLink}>Start 14-day free trial</Text>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
@@ -206,16 +230,60 @@ export default function Login() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.primary,
   },
   scrollContainer: {
-    padding: 20,
     flexGrow: 1,
   },
-  container: {
+  kav: {
     flex: 1,
+  },
+  hero: {
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: 28,
+    paddingTop: 48,
+    paddingBottom: 36,
+    gap: 6,
+  },
+  logoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginBottom: 8,
+  },
+  logoIcon: {
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    backgroundColor: "rgba(255,255,255,0.2)",
     justifyContent: "center",
-    padding: theme.spacing.md,
+    alignItems: "center",
+  },
+  logoName: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#fff",
+  },
+  heroTitle: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#fff",
+    lineHeight: 34,
+  },
+  heroSub: {
+    fontSize: 14,
+    color: "rgba(255,255,255,0.7)",
+  },
+  forgotBtn: {
+    alignSelf: "flex-end",
+    marginTop: -4,
+    marginBottom: 24,
+    padding: 4,
+  },
+  forgotText: {
+    fontSize: 13,
+    color: theme.colors.primary,
+    fontWeight: "500",
   },
   companyName: {
     fontSize: 26,
@@ -223,6 +291,15 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     textAlign: "center",
     color: theme.colors.primary,
+  },
+  form: {
+    flex: 1,
+    backgroundColor: "#f3f4f6",
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    padding: 24,
+    paddingTop: 28,
+    gap: 0,
   },
   contentContainer: {
     backgroundColor: theme.colors.card,
@@ -259,12 +336,38 @@ const styles = StyleSheet.create({
     marginTop: 20,
     gap: 5,
   },
-  footer: {
-    textAlign: "center",
-    fontSize: 14,
-  },
   link: {
     color: theme.colors.primary,
     fontWeight: "bold",
+  },
+  loginBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    backgroundColor: theme.colors.primary,
+    borderRadius: 12,
+    paddingVertical: 14,
+  },
+  textStyle: {
+    color: "#fff",
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f3f4f6",
+    paddingVertical: 24,
+    borderTopWidth: 0.5,
+    borderTopColor: "#e5e7eb",
+  },
+  footerText: {
+    fontSize: 13,
+    color: "#6b7280",
+  },
+  footerLink: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: theme.colors.primary,
   },
 });

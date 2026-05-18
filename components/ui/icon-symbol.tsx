@@ -56,6 +56,9 @@ const MAPPING = {
   'person.3.fill': 'groups',
   'person.fill.checkmark': 'person-add-alt-1',
   'indianrupeesign.circle.fill': 'currency-rupee',
+  'square.grid.2x2.fill': 'grid-view',
+  'eye.fill': 'visibility',
+  'eye.slash.fill': 'visibility-off',
 } as IconMapping;
 
 /**
